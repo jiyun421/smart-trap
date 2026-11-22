@@ -1,0 +1,1371 @@
+{
+ "data": [
+  {
+   "event_id": 1,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-09T00:45:34+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.63
+  },
+  {
+   "event_id": 2,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-09T02:22:38+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.7
+  },
+  {
+   "event_id": 3,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-09T03:52:18+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.7
+  },
+  {
+   "event_id": 4,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-09T04:01:09+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.93
+  },
+  {
+   "event_id": 5,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-09T04:19:02+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.95
+  },
+  {
+   "event_id": 6,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-09T04:23:50+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.71
+  },
+  {
+   "event_id": 7,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-09T04:53:41+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.98
+  },
+  {
+   "event_id": 8,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-09T16:57:29+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.79
+  },
+  {
+   "event_id": 9,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-09T22:08:22+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.91
+  },
+  {
+   "event_id": 10,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-09T22:50:51+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.84
+  },
+  {
+   "event_id": 11,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-10T00:31:54+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.93
+  },
+  {
+   "event_id": 12,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-10T01:42:23+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.9
+  },
+  {
+   "event_id": 13,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-10T03:34:57+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.71
+  },
+  {
+   "event_id": 14,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-10T04:47:48+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.81
+  },
+  {
+   "event_id": 15,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-10T05:29:02+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.97
+  },
+  {
+   "event_id": 16,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-10T05:43:33+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.61
+  },
+  {
+   "event_id": 17,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-10T08:31:03+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.86
+  },
+  {
+   "event_id": 18,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-10T12:42:37+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.73
+  },
+  {
+   "event_id": 19,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-10T18:42:00+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.9
+  },
+  {
+   "event_id": 20,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-10T19:08:39+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.91
+  },
+  {
+   "event_id": 21,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-10T22:17:53+09:00",
+   "ir_detected": true,
+   "classification": null,
+   "confidence": null
+  },
+  {
+   "event_id": 22,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-10T22:19:04+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.87
+  },
+  {
+   "event_id": 23,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-10T22:32:58+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.79
+  },
+  {
+   "event_id": 24,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-10T23:59:38+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.66
+  },
+  {
+   "event_id": 25,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-11T01:13:22+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.88
+  },
+  {
+   "event_id": 26,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-11T01:43:04+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.73
+  },
+  {
+   "event_id": 27,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-11T01:47:44+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.79
+  },
+  {
+   "event_id": 28,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-11T02:11:38+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.84
+  },
+  {
+   "event_id": 29,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-11T02:13:46+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.94
+  },
+  {
+   "event_id": 30,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-11T04:06:21+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.83
+  },
+  {
+   "event_id": 31,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-11T05:13:36+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.8
+  },
+  {
+   "event_id": 32,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-11T11:26:30+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.87
+  },
+  {
+   "event_id": 33,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-11T12:31:28+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.69
+  },
+  {
+   "event_id": 34,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-11T14:43:54+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.71
+  },
+  {
+   "event_id": 35,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-11T17:27:58+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.69
+  },
+  {
+   "event_id": 36,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-11T23:30:07+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.91
+  },
+  {
+   "event_id": 37,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-11T23:51:08+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.74
+  },
+  {
+   "event_id": 38,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-11T23:56:06+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.69
+  },
+  {
+   "event_id": 39,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-12T00:23:07+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.61
+  },
+  {
+   "event_id": 40,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-12T00:23:24+09:00",
+   "ir_detected": true,
+   "classification": null,
+   "confidence": null
+  },
+  {
+   "event_id": 41,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-12T01:26:35+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.72
+  },
+  {
+   "event_id": 42,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-12T02:48:22+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.82
+  },
+  {
+   "event_id": 43,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-12T04:01:18+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.91
+  },
+  {
+   "event_id": 44,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-12T04:46:00+09:00",
+   "ir_detected": true,
+   "classification": null,
+   "confidence": null
+  },
+  {
+   "event_id": 45,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-12T05:06:03+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.89
+  },
+  {
+   "event_id": 46,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-12T05:29:00+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.72
+  },
+  {
+   "event_id": 47,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-12T09:06:30+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.8
+  },
+  {
+   "event_id": 48,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-12T11:30:42+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.74
+  },
+  {
+   "event_id": 49,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-12T11:43:22+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.75
+  },
+  {
+   "event_id": 50,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-12T18:10:59+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.78
+  },
+  {
+   "event_id": 51,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-12T19:40:11+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.63
+  },
+  {
+   "event_id": 52,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-13T00:18:04+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.61
+  },
+  {
+   "event_id": 53,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-13T00:19:46+09:00",
+   "ir_detected": true,
+   "classification": null,
+   "confidence": null
+  },
+  {
+   "event_id": 54,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-13T01:02:38+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.62
+  },
+  {
+   "event_id": 55,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-13T01:34:53+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.9
+  },
+  {
+   "event_id": 56,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-13T02:02:37+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.73
+  },
+  {
+   "event_id": 57,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-13T02:34:32+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.74
+  },
+  {
+   "event_id": 58,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-13T02:46:30+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.7
+  },
+  {
+   "event_id": 59,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-13T03:36:27+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.98
+  },
+  {
+   "event_id": 60,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-13T04:44:36+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.6
+  },
+  {
+   "event_id": 61,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-13T04:53:34+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.98
+  },
+  {
+   "event_id": 62,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-13T07:01:04+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.92
+  },
+  {
+   "event_id": 63,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-13T14:57:50+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.86
+  },
+  {
+   "event_id": 64,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-13T21:14:49+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.89
+  },
+  {
+   "event_id": 65,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-13T22:04:26+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.84
+  },
+  {
+   "event_id": 66,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-13T22:16:12+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.9
+  },
+  {
+   "event_id": 67,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-13T23:02:30+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.7
+  },
+  {
+   "event_id": 68,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-13T23:13:09+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.77
+  },
+  {
+   "event_id": 69,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-13T23:30:11+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.93
+  },
+  {
+   "event_id": 70,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-13T23:43:46+09:00",
+   "ir_detected": true,
+   "classification": null,
+   "confidence": null
+  },
+  {
+   "event_id": 71,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-13T23:53:55+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.85
+  },
+  {
+   "event_id": 72,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-14T00:20:33+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.69
+  },
+  {
+   "event_id": 73,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-14T00:54:55+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.74
+  },
+  {
+   "event_id": 74,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-14T01:48:56+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.81
+  },
+  {
+   "event_id": 75,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-14T04:06:14+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.94
+  },
+  {
+   "event_id": 76,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-14T04:20:40+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.92
+  },
+  {
+   "event_id": 77,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-14T04:47:05+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.97
+  },
+  {
+   "event_id": 78,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-14T04:57:06+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.96
+  },
+  {
+   "event_id": 79,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-14T05:26:29+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.82
+  },
+  {
+   "event_id": 80,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-14T17:07:11+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.77
+  },
+  {
+   "event_id": 81,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-14T22:44:29+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.85
+  },
+  {
+   "event_id": 82,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-15T00:23:11+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.66
+  },
+  {
+   "event_id": 83,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-15T02:51:31+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.97
+  },
+  {
+   "event_id": 84,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-15T03:19:50+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.98
+  },
+  {
+   "event_id": 85,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-15T04:07:42+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.7
+  },
+  {
+   "event_id": 86,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-15T05:17:26+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.78
+  },
+  {
+   "event_id": 87,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-15T23:52:27+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.71
+  },
+  {
+   "event_id": 88,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-16T00:40:36+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.93
+  },
+  {
+   "event_id": 89,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-16T00:43:56+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.83
+  },
+  {
+   "event_id": 90,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-16T01:24:18+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.81
+  },
+  {
+   "event_id": 91,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-16T02:55:07+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.85
+  },
+  {
+   "event_id": 92,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-16T04:07:28+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.84
+  },
+  {
+   "event_id": 93,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-16T04:11:41+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.86
+  },
+  {
+   "event_id": 94,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-16T05:24:50+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.77
+  },
+  {
+   "event_id": 95,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-16T22:03:24+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.87
+  },
+  {
+   "event_id": 96,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-17T00:59:32+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.8
+  },
+  {
+   "event_id": 97,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-17T03:37:22+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.92
+  },
+  {
+   "event_id": 98,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-17T05:12:07+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.66
+  },
+  {
+   "event_id": 99,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-17T07:07:02+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.63
+  },
+  {
+   "event_id": 100,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-17T10:40:37+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.69
+  },
+  {
+   "event_id": 101,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-17T14:18:38+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.85
+  },
+  {
+   "event_id": 102,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-17T23:59:58+09:00",
+   "ir_detected": true,
+   "classification": null,
+   "confidence": null
+  },
+  {
+   "event_id": 103,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-18T03:45:21+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.82
+  },
+  {
+   "event_id": 104,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-18T05:32:59+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.74
+  },
+  {
+   "event_id": 105,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-18T05:33:33+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.79
+  },
+  {
+   "event_id": 106,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-18T05:52:22+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.93
+  },
+  {
+   "event_id": 107,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-18T11:54:00+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.98
+  },
+  {
+   "event_id": 108,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-18T13:09:22+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.7
+  },
+  {
+   "event_id": 109,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-18T14:17:05+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.84
+  },
+  {
+   "event_id": 110,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-18T19:27:20+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.68
+  },
+  {
+   "event_id": 111,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-18T19:49:10+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.68
+  },
+  {
+   "event_id": 112,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-18T22:27:21+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.98
+  },
+  {
+   "event_id": 113,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-18T22:33:09+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.98
+  },
+  {
+   "event_id": 114,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-18T22:54:26+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.9
+  },
+  {
+   "event_id": 115,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-18T23:41:15+09:00",
+   "ir_detected": true,
+   "classification": null,
+   "confidence": null
+  },
+  {
+   "event_id": 116,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-19T00:19:06+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.69
+  },
+  {
+   "event_id": 117,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-19T00:24:48+09:00",
+   "ir_detected": true,
+   "classification": null,
+   "confidence": null
+  },
+  {
+   "event_id": 118,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-19T00:56:54+09:00",
+   "ir_detected": true,
+   "classification": null,
+   "confidence": null
+  },
+  {
+   "event_id": 119,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-19T02:56:51+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.63
+  },
+  {
+   "event_id": 120,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-19T03:19:45+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.66
+  },
+  {
+   "event_id": 121,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-19T05:50:08+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.9
+  },
+  {
+   "event_id": 122,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-19T12:12:04+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.66
+  },
+  {
+   "event_id": 123,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-19T23:08:17+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.68
+  },
+  {
+   "event_id": 124,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-20T00:28:27+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.94
+  },
+  {
+   "event_id": 125,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-20T02:07:03+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.6
+  },
+  {
+   "event_id": 126,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-20T02:10:20+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.64
+  },
+  {
+   "event_id": 127,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-20T02:21:28+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.74
+  },
+  {
+   "event_id": 128,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-20T02:33:32+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.66
+  },
+  {
+   "event_id": 129,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-20T02:39:06+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.77
+  },
+  {
+   "event_id": 130,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-20T02:44:43+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.71
+  },
+  {
+   "event_id": 131,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-20T03:34:00+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.94
+  },
+  {
+   "event_id": 132,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-20T04:36:50+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.71
+  },
+  {
+   "event_id": 133,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-20T04:51:50+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.83
+  },
+  {
+   "event_id": 134,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-20T04:51:59+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.65
+  },
+  {
+   "event_id": 135,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-20T05:26:04+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.84
+  },
+  {
+   "event_id": 136,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-20T11:05:57+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.73
+  },
+  {
+   "event_id": 137,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-20T22:10:14+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.64
+  },
+  {
+   "event_id": 138,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-20T23:36:30+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.94
+  },
+  {
+   "event_id": 139,
+   "trap_id": "TRAP-04",
+   "detected_at": "2026-11-21T01:46:52+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.61
+  },
+  {
+   "event_id": 140,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-21T02:12:38+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.61
+  },
+  {
+   "event_id": 141,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-21T02:28:55+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.68
+  },
+  {
+   "event_id": 142,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-21T02:43:34+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.78
+  },
+  {
+   "event_id": 143,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-21T03:42:58+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.69
+  },
+  {
+   "event_id": 144,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-21T03:46:27+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.63
+  },
+  {
+   "event_id": 145,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-21T03:52:04+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.95
+  },
+  {
+   "event_id": 146,
+   "trap_id": "TRAP-04",
+   "detected_at": "2026-11-21T04:02:14+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.67
+  },
+  {
+   "event_id": 147,
+   "trap_id": "TRAP-04",
+   "detected_at": "2026-11-21T04:05:03+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.84
+  },
+  {
+   "event_id": 148,
+   "trap_id": "TRAP-04",
+   "detected_at": "2026-11-21T05:13:58+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.98
+  },
+  {
+   "event_id": 149,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-21T05:30:07+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.61
+  },
+  {
+   "event_id": 150,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-21T05:39:07+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.85
+  },
+  {
+   "event_id": 151,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-21T06:20:06+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.75
+  },
+  {
+   "event_id": 152,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-21T21:09:29+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.8
+  },
+  {
+   "event_id": 153,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-21T22:15:52+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.62
+  },
+  {
+   "event_id": 154,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-21T22:18:08+09:00",
+   "ir_detected": true,
+   "classification": "non_rat",
+   "confidence": 0.76
+  },
+  {
+   "event_id": 155,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-21T22:22:08+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.88
+  },
+  {
+   "event_id": 156,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-21T22:36:17+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.81
+  },
+  {
+   "event_id": 157,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-21T22:42:36+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.93
+  },
+  {
+   "event_id": 158,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-21T23:10:18+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.82
+  },
+  {
+   "event_id": 159,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-22T00:40:40+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.67
+  },
+  {
+   "event_id": 160,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-22T00:45:17+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.89
+  },
+  {
+   "event_id": 161,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-22T01:36:00+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.74
+  },
+  {
+   "event_id": 162,
+   "trap_id": "TRAP-03",
+   "detected_at": "2026-11-22T02:49:35+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.85
+  },
+  {
+   "event_id": 163,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-22T03:30:39+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.6
+  },
+  {
+   "event_id": 164,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-22T05:17:46+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.61
+  },
+  {
+   "event_id": 165,
+   "trap_id": "TRAP-04",
+   "detected_at": "2026-11-22T05:29:07+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.93
+  },
+  {
+   "event_id": 166,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-22T17:06:01+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.92
+  },
+  {
+   "event_id": 167,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-22T19:13:03+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.61
+  },
+  {
+   "event_id": 168,
+   "trap_id": "TRAP-04",
+   "detected_at": "2026-11-22T22:02:34+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.97
+  },
+  {
+   "event_id": 169,
+   "trap_id": "TRAP-02",
+   "detected_at": "2026-11-22T23:31:23+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.75
+  },
+  {
+   "event_id": 170,
+   "trap_id": "TRAP-01",
+   "detected_at": "2026-11-22T23:51:53+09:00",
+   "ir_detected": true,
+   "classification": "rat",
+   "confidence": 0.85
+  }
+ ],
+ "meta": {
+  "page": 1,
+  "page_size": 1000,
+  "total": 170,
+  "from": "2026-11-09T00:00:00+09:00",
+  "to": "2026-11-23T00:00:00+09:00"
+ }
+}

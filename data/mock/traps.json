@@ -1,0 +1,36 @@
+{
+ "data": [
+  {
+   "trap_id": "TRAP-01",
+   "location_id": "LOC-A",
+   "installed_at": "2026-11-09T00:00:00+09:00",
+   "status": "operating",
+   "door_state": "closed",
+   "last_seen_at": "2026-11-22T23:59:00+09:00"
+  },
+  {
+   "trap_id": "TRAP-02",
+   "location_id": "LOC-B",
+   "installed_at": "2026-11-09T00:00:00+09:00",
+   "status": "operating",
+   "door_state": "closed",
+   "last_seen_at": "2026-11-22T23:59:00+09:00"
+  },
+  {
+   "trap_id": "TRAP-03",
+   "location_id": "LOC-C",
+   "installed_at": "2026-11-09T00:00:00+09:00",
+   "status": "operating",
+   "door_state": "closed",
+   "last_seen_at": "2026-11-22T23:59:00+09:00"
+  },
+  {
+   "trap_id": "TRAP-04",
+   "location_id": "LOC-D",
+   "installed_at": "2026-11-21T00:00:00+09:00",
+   "status": "operating",
+   "door_state": "closed",
+   "last_seen_at": "2026-11-22T23:59:00+09:00"
+  }
+ ]
+}

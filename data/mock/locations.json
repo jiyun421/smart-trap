@@ -1,0 +1,39 @@
+{
+ "data": [
+  {
+   "location_id": "LOC-A",
+   "name": "주방 입구",
+   "is_candidate": false,
+   "x": 1.0,
+   "y": 1.0
+  },
+  {
+   "location_id": "LOC-B",
+   "name": "창고 중앙",
+   "is_candidate": false,
+   "x": 4.0,
+   "y": 1.0
+  },
+  {
+   "location_id": "LOC-C",
+   "name": "복도 끝",
+   "is_candidate": false,
+   "x": 7.0,
+   "y": 1.0
+  },
+  {
+   "location_id": "LOC-D",
+   "name": "후문 옆",
+   "is_candidate": false,
+   "x": 1.0,
+   "y": 4.0
+  },
+  {
+   "location_id": "LOC-E",
+   "name": "쓰레기장 뒤",
+   "is_candidate": true,
+   "x": 4.0,
+   "y": 4.0
+  }
+ ]
+}

@@ -1,0 +1,53 @@
+{
+ "data": [
+  {
+   "log_id": 1,
+   "trap_id": "TRAP-01",
+   "changed_at": "2026-11-09T00:00:00+09:00",
+   "status": "operating",
+   "door_state": "closed"
+  },
+  {
+   "log_id": 2,
+   "trap_id": "TRAP-02",
+   "changed_at": "2026-11-09T00:00:00+09:00",
+   "status": "operating",
+   "door_state": "closed"
+  },
+  {
+   "log_id": 5,
+   "trap_id": "TRAP-03",
+   "changed_at": "2026-11-09T00:00:00+09:00",
+   "status": "operating",
+   "door_state": "closed"
+  },
+  {
+   "log_id": 3,
+   "trap_id": "TRAP-02",
+   "changed_at": "2026-11-14T10:00:00+09:00",
+   "status": "stopped",
+   "door_state": "closed"
+  },
+  {
+   "log_id": 4,
+   "trap_id": "TRAP-02",
+   "changed_at": "2026-11-14T22:00:00+09:00",
+   "status": "operating",
+   "door_state": "closed"
+  },
+  {
+   "log_id": 6,
+   "trap_id": "TRAP-04",
+   "changed_at": "2026-11-21T00:00:00+09:00",
+   "status": "operating",
+   "door_state": "closed"
+  }
+ ],
+ "meta": {
+  "page": 1,
+  "page_size": 1000,
+  "total": 6,
+  "from": "2026-11-09T00:00:00+09:00",
+  "to": "2026-11-23T00:00:00+09:00"
+ }
+}

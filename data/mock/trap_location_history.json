@@ -1,0 +1,28 @@
+{
+ "data": [
+  {
+   "trap_id": "TRAP-01",
+   "location_id": "LOC-A",
+   "start_at": "2026-11-09T00:00:00+09:00",
+   "end_at": null
+  },
+  {
+   "trap_id": "TRAP-02",
+   "location_id": "LOC-B",
+   "start_at": "2026-11-09T00:00:00+09:00",
+   "end_at": null
+  },
+  {
+   "trap_id": "TRAP-03",
+   "location_id": "LOC-C",
+   "start_at": "2026-11-09T00:00:00+09:00",
+   "end_at": null
+  },
+  {
+   "trap_id": "TRAP-04",
+   "location_id": "LOC-D",
+   "start_at": "2026-11-21T00:00:00+09:00",
+   "end_at": null
+  }
+ ]
+}
