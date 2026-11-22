@@ -1,0 +1,143 @@
+{
+  "run_id": "RUN-20261123-140530",
+  "generated_at": "2026-11-23T14:05:30+09:00",
+  "analysis_period": {
+    "from": "2026-11-09T00:00:00+09:00",
+    "to": "2026-12-07T00:00:00+09:00"
+  },
+  "algorithm_version": "score-v0.1",
+  "data_basis": {
+    "detection_data": "synthetic",
+    "capture_data": "synthetic",
+    "is_simulation_based": true,
+    "note": "감지·포획 모두 가상(시나리오) 데이터 기반이며 실제 현장 실적이 아님"
+  },
+  "recommendations": [
+    {
+      "trap_id": "TRAP-01",
+      "current_location_id": "LOC-A",
+      "recommended_location_id": null,
+      "recommended_location_type": null,
+      "relocate": false,
+      "status": "keep",
+      "priority": null,
+      "score": null,
+      "current_location_score": 1.0,
+      "reasons": [
+        "현재 위치(LOC-A) 점수 1.00: 다른 위치로 옮길 만큼 확실히 낮지 않음"
+      ],
+      "actual_stats": {
+        "operating_hours": 626.0,
+        "rat_detections": 182,
+        "non_rat_detections": 29,
+        "rat_detections_per_hour": 0.291
+      },
+      "simulated_stats": {
+        "captures": 66,
+        "capture_conversion_rate": 0.363,
+        "captures_per_hour": 0.105
+      }
+    },
+    {
+      "trap_id": "TRAP-02",
+      "current_location_id": "LOC-A",
+      "recommended_location_id": null,
+      "recommended_location_type": null,
+      "relocate": false,
+      "status": "keep",
+      "priority": null,
+      "score": null,
+      "current_location_score": 1.0,
+      "reasons": [
+        "현재 위치(LOC-A) 점수 1.00: 다른 위치로 옮길 만큼 확실히 낮지 않음"
+      ],
+      "actual_stats": {
+        "operating_hours": 318.0,
+        "rat_detections": 91,
+        "non_rat_detections": 15,
+        "rat_detections_per_hour": 0.286
+      },
+      "simulated_stats": {
+        "captures": 34,
+        "capture_conversion_rate": 0.374,
+        "captures_per_hour": 0.107
+      }
+    },
+    {
+      "trap_id": "TRAP-03",
+      "current_location_id": "LOC-C",
+      "recommended_location_id": "LOC-A",
+      "recommended_location_type": "existing",
+      "relocate": true,
+      "status": "recommended",
+      "priority": 1,
+      "score": 1.0,
+      "current_location_score": 0.049,
+      "reasons": [
+        "현재 위치(LOC-C) 점수 0.05 ≤ 추천 위치(LOC-A) 점수 1.00의 50%, 시간당 가상 포획 차이도 구간 기준으로 유의함",
+        "원인 미확정(같은 위치 다른 트랩·이전 설치 이력 없음) → 위치 문제 가능성으로 재배치 제안"
+      ],
+      "actual_stats": {
+        "operating_hours": 640.0,
+        "rat_detections": 35,
+        "non_rat_detections": 2,
+        "rat_detections_per_hour": 0.055
+      },
+      "simulated_stats": {
+        "captures": 6,
+        "capture_conversion_rate": 0.171,
+        "captures_per_hour": 0.009
+      }
+    },
+    {
+      "trap_id": "TRAP-04",
+      "current_location_id": "LOC-D",
+      "recommended_location_id": null,
+      "recommended_location_type": null,
+      "relocate": false,
+      "status": "insufficient_data",
+      "priority": null,
+      "score": null,
+      "current_location_score": null,
+      "reasons": [
+        "현재 위치 관측 3일·작동 72시간·쥐 감지 14건으로 기준(7일, 72시간, 감지 10건) 미달 → 추천 확정 안 함"
+      ],
+      "actual_stats": {
+        "operating_hours": 72.0,
+        "rat_detections": 14,
+        "non_rat_detections": 0,
+        "rat_detections_per_hour": 0.194
+      },
+      "simulated_stats": {
+        "captures": 5,
+        "capture_conversion_rate": 0.357,
+        "captures_per_hour": 0.069
+      }
+    },
+    {
+      "trap_id": "TRAP-06",
+      "current_location_id": "LOC-A",
+      "recommended_location_id": null,
+      "recommended_location_type": null,
+      "relocate": false,
+      "status": "device_check",
+      "priority": null,
+      "score": null,
+      "current_location_score": 1.0,
+      "reasons": [
+        "TRAP-06은(는) LOC-A에서 감지 대비 가상 포획 전환율이 3%로, 같은 위치·같은 기간의 다른 트랩(36%)보다 확실히 낮음 → 위치가 아니라 장치 점검 필요"
+      ],
+      "actual_stats": {
+        "operating_hours": 330.0,
+        "rat_detections": 75,
+        "non_rat_detections": 10,
+        "rat_detections_per_hour": 0.227
+      },
+      "simulated_stats": {
+        "captures": 2,
+        "capture_conversion_rate": 0.027,
+        "captures_per_hour": 0.006
+      }
+    }
+  ]
+}
