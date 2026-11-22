@@ -1,0 +1,7 @@
+location_id,scenario_type,expected_judgement
+LOC-A,high_detection_high_capture,keep
+LOC-B,high_detection_low_capture_location_issue,relocate
+LOC-C,low_detection_low_capture,relocate
+LOC-D,short_observation,insufficient_data
+LOC-E,no_install_history_candidate,new_candidate
+LOC-F,high_detection_low_capture_device_issue,check_device
