@@ -45,6 +45,8 @@ NIGHT_SHARE = 0.75            # 야간(22~05시) 감지 비중
 NON_RAT_RATIO = 0.15          # 쥐 감지 대비 비대상 동물 비율
 UNCLASSIFIED_RATE = 0.05      # 분류 실패 비율
 MISSING_RATE = 0.02           # 센서 값 결측 비율
+TEMP_DAY_SD = 2.5             # 날짜별 온도 변동 표준편차(℃)
+HUM_DAY_SD = 6.0              # 날짜별 습도 변동 표준편차(%p)
 NIGHT_HOURS = {22, 23, 0, 1, 2, 3, 4, 5}
 
 SCENARIO_TRUTH = [
@@ -88,8 +90,15 @@ def _operating_mask(trap_id, segs, rng):
     return mask
 
 
+def _daily_weather():
+    """날짜별 날씨 변동(모든 트랩 공통). 트랩별 난수 흐름을 건드리지 않도록 별도 시드를 쓴다."""
+    r = np.random.default_rng(SEED + 1000)
+    return r.normal(0, TEMP_DAY_SD, DAYS), r.normal(0, HUM_DAY_SD, DAYS)
+
+
 def _simulate_trap(trap_id, segs, rng):
     mask = _operating_mask(trap_id, segs, rng)
+    temp_off, hum_off = _daily_weather()
     factor = DEVICE_FACTOR.get(trap_id, 1.0)
     events, hours = [], []
     for _, loc, d0, d1 in segs:
@@ -98,8 +107,8 @@ def _simulate_trap(trap_id, segs, rng):
             if not mask[h]:
                 continue
             hod = h % 24
-            temp = 21 + 1.5 * np.sin(2 * np.pi * (hod - 9) / 24) + rng.normal(0, 0.5)
-            hum = float(np.clip(50 + 5 * np.sin(2 * np.pi * (hod - 3) / 24) + rng.normal(0, 2), 20, 90))
+            temp = 21 + temp_off[h // 24] + 1.5 * np.sin(2 * np.pi * (hod - 9) / 24) + rng.normal(0, 0.5)
+            hum = float(np.clip(50 + hum_off[h // 24] + 5 * np.sin(2 * np.pi * (hod - 3) / 24) + rng.normal(0, 2), 20, 90))
             sensors = {
                 "temperature_c": temp, "humidity_pct": hum,
                 "tvoc_ppb": float(rng.integers(50, 301)), "eco2_ppm": float(rng.integers(400, 701)),
