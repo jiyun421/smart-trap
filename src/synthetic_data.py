@@ -90,15 +90,15 @@ def _operating_mask(trap_id, segs, rng):
     return mask
 
 
-def _daily_weather():
+def _daily_weather(seed=SEED):
     """날짜별 날씨 변동(모든 트랩 공통). 트랩별 난수 흐름을 건드리지 않도록 별도 시드를 쓴다."""
-    r = np.random.default_rng(SEED + 1000)
+    r = np.random.default_rng(seed + 1000)
     return r.normal(0, TEMP_DAY_SD, DAYS), r.normal(0, HUM_DAY_SD, DAYS)
 
 
-def _simulate_trap(trap_id, segs, rng):
+def _simulate_trap(trap_id, segs, rng, seed=SEED):
     mask = _operating_mask(trap_id, segs, rng)
-    temp_off, hum_off = _daily_weather()
+    temp_off, hum_off = _daily_weather(seed)
     factor = DEVICE_FACTOR.get(trap_id, 1.0)
     events, hours = [], []
     for _, loc, d0, d1 in segs:
@@ -135,12 +135,12 @@ def _simulate_trap(trap_id, segs, rng):
     return events, hours
 
 
-def generate_scenario(out_dir=OUT_DIR, write=True):
+def generate_scenario(out_dir=OUT_DIR, write=True, seed=SEED):
     all_events, all_hours = [], []
     traps = sorted({s[0] for s in SEGMENTS})
     for trap_id in traps:
-        rng = np.random.default_rng(SEED + int(trap_id[-2:]))
-        ev, hr = _simulate_trap(trap_id, [s for s in SEGMENTS if s[0] == trap_id], rng)
+        rng = np.random.default_rng(seed + int(trap_id[-2:]))
+        ev, hr = _simulate_trap(trap_id, [s for s in SEGMENTS if s[0] == trap_id], rng, seed)
         all_events += ev
         all_hours += hr
 

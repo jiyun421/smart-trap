@@ -98,7 +98,7 @@
 | `trap_id`      | string           | 트랩 ID                                       |
 | `location_id`  | string           | **현재** 설치 위치 ID                         |
 | `installed_at` | string(datetime) | 현재 위치에 설치한 시각                       |
-| `status`       | string           | `operating` / `stopped` / `error` / `unknown` |
+| `status`                           | string          | `recommended`(재배치 권고) / `keep`(유지) / `insufficient_data`(데이터 부족, 추천 확정 안 함) / `device_check`(장치 점검 권고, v1.1 추가·Pi 담당자 확인 필요) |
 | `door_state`   | string \| null   | `open` / `closed` / `null`(미확인)            |
 | `last_seen_at` | string \| null   | 마지막 통신 시각                              |
 
