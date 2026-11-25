@@ -54,7 +54,9 @@ def test_서버가_없으면_CONNECTION_ERROR():
 
 def test_대시보드가_같은_출처에서_제공되고_API를_읽는다(server, client):
     html = urllib.request.urlopen(server + "/dashboard/").read().decode()
-    assert "sim-banner" in html
+    assert "js/layout.js" in html  # 상시 배너(sim-banner)는 layout.js가 그린다
+    layout = urllib.request.urlopen(server + "/dashboard/js/layout.js").read().decode()
+    assert "sim-banner" in layout
     summary = load_trap_day_summary(SCENARIO_CSV)
     export_recommendations(summary, client, run_id="RUN-HTTP-2")
     # 대시보드가 쓰는 URL: GET {apiBase}/recommendations (파라미터 없음 = 최신 run)

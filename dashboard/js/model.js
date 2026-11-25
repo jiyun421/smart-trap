@@ -106,6 +106,160 @@
     });
   }
 
+
+  // ------------------------------------------------------------ 화면용 계산
+  // 프로젝트의 모든 시각은 KST(+09:00)다. 날짜 구분은 KST 기준으로 한다.
+  var KST_MS = 9 * 3600 * 1000, DAY_MS = 86400000, OFFLINE_MS = 30 * 60 * 1000;
+
+  function ms(iso) {
+    var t = Date.parse(iso);
+    return isFinite(t) ? t : null;
+  }
+  function kstDate(t) {
+    return new Date(t + KST_MS).toISOString().slice(0, 10);
+  }
+
+  var TRAP_STATE = {
+    ok: { label: "정상", icon: "●" },
+    warn: { label: "점검 필요", icon: "!" },
+    off: { label: "오프라인", icon: "○" },
+  };
+
+  /** 오프라인: 마지막 통신이 없거나 30분 넘음 / 점검 필요: 상태가 operating이 아니거나 추천 판정이 device_check */
+  function trapState(trap, nowMs, rec) {
+    var seen = ms(trap.last_seen_at);
+    if (seen === null || nowMs - seen > OFFLINE_MS) return "off";
+    if (trap.status !== "operating" || (rec && rec.status === "device_check")) return "warn";
+    return "ok";
+  }
+
+  /** id별 가장 최근 행 (ts 기준) */
+  function latestBy(rows, idKey, tsKey) {
+    var out = {};
+    rows.forEach(function (r) {
+      var t = ms(r[tsKey]);
+      if (t === null) return;
+      var cur = out[r[idKey]];
+      if (!cur || t >= ms(cur[tsKey])) out[r[idKey]] = r;
+    });
+    return out;
+  }
+
+  /** [fromMs, toMs) 구간의 행 */
+  function inWindow(rows, tsKey, fromMs, toMs) {
+    return rows.filter(function (r) {
+      var t = ms(r[tsKey]);
+      return t !== null && t >= fromMs && t < toMs;
+    });
+  }
+
+  /** 시각(0~23)별 건수. 분류 결측(미식별)은 호출 쪽에서 걸러서 넘긴다. */
+  function hourOfDay(events) {
+    var out = [];
+    for (var i = 0; i < 24; i++) out.push(0);
+    events.forEach(function (e) {
+      var m = /T(\d{2}):/.exec(String(e.detected_at || ""));
+      if (m) out[+m[1]] += 1;
+    });
+    return out;
+  }
+
+  /** 마지막 days일(now 직전까지)의 날짜별 건수 */
+  function dailyCounts(events, nowMs, days) {
+    var out = [];
+    for (var i = days - 1; i >= 0; i--) out.push({ date: kstDate(nowMs - 1 - i * DAY_MS), count: 0 });
+    events.forEach(function (e) {
+      var t = ms(e.detected_at);
+      if (t === null) return;
+      var d = kstDate(t);
+      out.forEach(function (o) { if (o.date === d) o.count += 1; });
+    });
+    return out;
+  }
+
+  /** 날짜별 평균(결측 제외). 값이 하나도 없으면 null (0이 아님) */
+  function dailyAvg(readings, key, dates) {
+    return dates.map(function (d) {
+      var vals = readings.filter(function (r) {
+        return isNum(r[key]) && String(r.measured_at).slice(0, 10) === d;
+      }).map(function (r) { return r[key]; });
+      return vals.length ? vals.reduce(function (a, b) { return a + b; }, 0) / vals.length : null;
+    });
+  }
+
+  /** 피어슨 상관계수. 짝이 3개 미만이거나 분산이 0이면 null */
+  function pearson(xs, ys) {
+    var px = [], py = [];
+    xs.forEach(function (x, i) { if (isNum(x) && isNum(ys[i])) { px.push(x); py.push(ys[i]); } });
+    var n = px.length;
+    if (n < 3) return null;
+    var mx = px.reduce(function (a, b) { return a + b; }, 0) / n;
+    var my = py.reduce(function (a, b) { return a + b; }, 0) / n;
+    var sxy = 0, sxx = 0, syy = 0;
+    for (var i = 0; i < n; i++) {
+      sxy += (px[i] - mx) * (py[i] - my); sxx += (px[i] - mx) * (px[i] - mx); syy += (py[i] - my) * (py[i] - my);
+    }
+    return sxx === 0 || syy === 0 ? null : sxy / Math.sqrt(sxx * syy);
+  }
+
+  /** 감지 시각에 트랩이 있던 위치별 건수 (trap_location_history 기준) */
+  function locationCounts(events, history) {
+    var out = {};
+    events.forEach(function (e) {
+      var t = ms(e.detected_at);
+      if (t === null) return;
+      for (var i = 0; i < history.length; i++) {
+        var h = history[i], s = ms(h.start_at), en = h.end_at ? ms(h.end_at) : null;
+        if (h.trap_id === e.trap_id && s !== null && t >= s && (en === null || t < en)) {
+          out[h.location_id] = (out[h.location_id] || 0) + 1;
+          break;
+        }
+      }
+    });
+    return out;
+  }
+
+  /** 오늘(now 직전 날짜)이면 시각만, 아니면 월-일 시각 */
+  function fmtRecent(iso, nowMs) {
+    var t = ms(iso);
+    if (t === null) return "—";
+    var s = String(iso);
+    return kstDate(t) === kstDate(nowMs - 1) ? s.slice(11, 16) : s.slice(5, 10) + " " + s.slice(11, 16);
+  }
+
+  /** eCO₂ 판정. 값이 없으면 판정하지 않는다(null). */
+  function ecoJudge(ppm, threshold) {
+    if (!isNum(ppm)) return null;
+    return ppm >= threshold ? "collect" : "ok";
+  }
+
+  function toCsv(header, rows) {
+    function q(v) {
+      var s = v === null || v === undefined ? "" : String(v);
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+    return [header].concat(rows).map(function (r) { return r.map(q).join(","); }).join("\r\n");
+  }
+
+  function fmtInt(v) {
+    return isNum(v) ? Math.round(v).toLocaleString("en-US") : "—";
+  }
+
+
+  /** 트랩별 화면용 묶음: 위치·추천 판정·최신 측정값·마지막 감지·작동 상태 */
+  function trapViews(ctx) {
+    var locs = {}, recs = {};
+    ctx.locations.forEach(function (l) { locs[l.location_id] = l; });
+    ((ctx.recs && ctx.recs.recommendations) || []).forEach(function (r) { recs[r.trap_id] = r; });
+    var read = latestBy(ctx.readings, "trap_id", "measured_at");
+    var last = latestBy(ctx.events, "trap_id", "detected_at");
+    return ctx.traps.map(function (t) {
+      return { trap: t, loc: locs[t.location_id] || null, rec: recs[t.trap_id] || null,
+        reading: read[t.trap_id] || null, lastEvent: last[t.trap_id] || null,
+        state: trapState(t, ctx.now, recs[t.trap_id]) };
+    });
+  }
+
   var api = {
     STATUS: STATUS,
     statusMeta: statusMeta,
@@ -119,6 +273,10 @@
     basisInfo: basisInfo,
     detectionLabel: detectionLabel,
     chartRows: chartRows,
+    ms: ms, kstDate: kstDate, TRAP_STATE: TRAP_STATE, trapState: trapState, latestBy: latestBy,
+    inWindow: inWindow, hourOfDay: hourOfDay, dailyCounts: dailyCounts, dailyAvg: dailyAvg,
+    pearson: pearson, locationCounts: locationCounts, fmtRecent: fmtRecent, ecoJudge: ecoJudge,
+    toCsv: toCsv, fmtInt: fmtInt, trapViews: trapViews,
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.DashModel = api;
