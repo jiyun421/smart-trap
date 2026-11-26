@@ -9,11 +9,12 @@ import sys
 import threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from urllib.parse import parse_qsl, urlsplit
 
 from src.api_client import MockTransport
 
-ROOT = __file__.rsplit("/src/", 1)[0]
+ROOT = str(Path(__file__).resolve().parent.parent)  # 경로 구분자(\ 또는 /)와 무관하게 프로젝트 루트(pc/)
 PREFIX = "/api/v1"
 
 
