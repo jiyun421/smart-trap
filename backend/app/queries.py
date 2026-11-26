@@ -19,6 +19,14 @@ def traps(connection):
     return {"items": [dict(row) for row in rows]}
 
 
+def deployments(connection):
+    """설치 이력(재배치 이력 포함). 종료되지 않은 설치는 ended_at이 null이다."""
+    conditions, params = filter_trap(connection, "trap_id")
+    sql = "SELECT * FROM deployments" + where_sql(conditions)
+    rows = connection.execute(sql + " ORDER BY started_at, deployment_id", params)
+    return {"items": [dict(row) for row in rows]}
+
+
 def locations(connection):
     rows = connection.execute(
         """SELECT l.*, (SELECT COUNT(*) FROM deployments d

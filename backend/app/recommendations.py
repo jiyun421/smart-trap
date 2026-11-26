@@ -11,6 +11,7 @@ from .validation import (
 
 PREDICTION_KINDS = ("target_entry", "target_capture")
 SCORE_TYPES = ("probability", "relative_score")
+DATA_SOURCES = ("actual", "synthetic", "mixed", "unknown")
 RUN_COLUMNS = (
     "run_id", "trap_id", "target_species", "model_version", "generated_at", "prediction_kind",
     "data_from", "data_to", "forecast_from", "forecast_to", "status",
@@ -19,8 +20,14 @@ MAX_CANDIDATES = 500
 
 
 def parse_run(body):
-    object_fields(body, "run", (*RUN_COLUMNS, "candidates"), ("score_type", "reason"))
+    object_fields(body, "run", (*RUN_COLUMNS, "candidates"), ("score_type", "reason", "data_basis", "details"))
     result = {field: identifier(body[field], field) for field in ("run_id", "trap_id", "target_species")}
+    if "data_basis" in body:
+        result["data_basis"] = parse_data_basis(body["data_basis"])
+    if "details" in body:
+        if not isinstance(body["details"], dict):
+            raise invalid("details must be a JSON object")
+        result["details"] = body["details"]
     if result["target_species"] == "unknown":
         raise invalid("target_species must be a known species code")
     result["model_version"] = nonempty_text(body["model_version"], "model_version", 128)
@@ -53,6 +60,19 @@ def parse_run(body):
             raise invalid(f"Candidate {key} values must be unique")
     result["candidates"] = sorted(candidates, key=lambda candidate: candidate["rank"])
     return result
+
+
+def parse_data_basis(body):
+    """입력 데이터가 실제인지 가상(시뮬레이션)인지 표시한다. 대시보드가 가상 데이터 기반 결과를 구분하는 데 쓴다."""
+    object_fields(body, "data_basis", ("detection_data", "capture_data", "is_simulation_based", "note"))
+    if type(body["is_simulation_based"]) is not bool:
+        raise invalid("is_simulation_based must be a boolean")
+    return {
+        "detection_data": choice(body["detection_data"], "detection_data", DATA_SOURCES),
+        "capture_data": choice(body["capture_data"], "capture_data", DATA_SOURCES),
+        "is_simulation_based": body["is_simulation_based"],
+        "note": nonempty_text(body["note"], "data_basis note"),
+    }
 
 
 def parse_candidate(body):

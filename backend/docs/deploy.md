@@ -34,7 +34,7 @@ sudo test -f /etc/iot-trap/backend.env || sudo install -m 0600 .env.example /etc
 sudoedit /etc/iot-trap/backend.env
 ```
 
-`TRAP_DEVICE_TOKENS`는 `{"trap-01":"발급한_장치_토큰"}` 형태입니다. `TRAP_READ_TOKEN`과 `TRAP_RECOMMENDATION_TOKEN`에도 각각 별도 값을 설정합니다. 각 토큰은 다음 명령으로 한 번씩 생성해 해당 장치나 PC에만 전달합니다.
+`TRAP_DEVICE_TOKENS`는 `{"trap-01":"발급한_장치_토큰"}` 형태입니다. `TRAP_READ_TOKEN`과 `TRAP_RECOMMENDATION_TOKEN`에도 각각 별도 값을 설정합니다. 내부망의 정적 대시보드가 토큰 없이 읽어야 하면 `TRAP_READ_AUTH=off`를 추가합니다(기본 `required`). 조회만 열리고 장치·추천 쓰기 토큰은 계속 필요하며, 이 경우 `TRAP_READ_TOKEN`은 생략할 수 있습니다. 각 토큰은 다음 명령으로 한 번씩 생성해 해당 장치나 PC에만 전달합니다.
 
 ```sh
 python3 -c 'import secrets; print(secrets.token_urlsafe(32))'
