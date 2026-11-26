@@ -106,10 +106,11 @@
     });
   }
 
-
   // ------------------------------------------------------------ 화면용 계산
   // 프로젝트의 모든 시각은 KST(+09:00)다. 날짜 구분은 KST 기준으로 한다.
-  var KST_MS = 9 * 3600 * 1000, DAY_MS = 86400000, OFFLINE_MS = 30 * 60 * 1000;
+  var KST_MS = 9 * 3600 * 1000,
+    DAY_MS = 86400000,
+    OFFLINE_MS = 30 * 60 * 1000;
 
   function ms(iso) {
     var t = Date.parse(iso);
@@ -129,7 +130,8 @@
   function trapState(trap, nowMs, rec) {
     var seen = ms(trap.last_seen_at);
     if (seen === null || nowMs - seen > OFFLINE_MS) return "off";
-    if (trap.status !== "operating" || (rec && rec.status === "device_check")) return "warn";
+    if (trap.status !== "operating" || (rec && rec.status === "device_check"))
+      return "warn";
     return "ok";
   }
 
@@ -167,12 +169,15 @@
   /** 마지막 days일(now 직전까지)의 날짜별 건수 */
   function dailyCounts(events, nowMs, days) {
     var out = [];
-    for (var i = days - 1; i >= 0; i--) out.push({ date: kstDate(nowMs - 1 - i * DAY_MS), count: 0 });
+    for (var i = days - 1; i >= 0; i--)
+      out.push({ date: kstDate(nowMs - 1 - i * DAY_MS), count: 0 });
     events.forEach(function (e) {
       var t = ms(e.detected_at);
       if (t === null) return;
       var d = kstDate(t);
-      out.forEach(function (o) { if (o.date === d) o.count += 1; });
+      out.forEach(function (o) {
+        if (o.date === d) o.count += 1;
+      });
     });
     return out;
   }
@@ -180,24 +185,48 @@
   /** 날짜별 평균(결측 제외). 값이 하나도 없으면 null (0이 아님) */
   function dailyAvg(readings, key, dates) {
     return dates.map(function (d) {
-      var vals = readings.filter(function (r) {
-        return isNum(r[key]) && String(r.measured_at).slice(0, 10) === d;
-      }).map(function (r) { return r[key]; });
-      return vals.length ? vals.reduce(function (a, b) { return a + b; }, 0) / vals.length : null;
+      var vals = readings
+        .filter(function (r) {
+          return isNum(r[key]) && String(r.measured_at).slice(0, 10) === d;
+        })
+        .map(function (r) {
+          return r[key];
+        });
+      return vals.length
+        ? vals.reduce(function (a, b) {
+            return a + b;
+          }, 0) / vals.length
+        : null;
     });
   }
 
   /** 피어슨 상관계수. 짝이 3개 미만이거나 분산이 0이면 null */
   function pearson(xs, ys) {
-    var px = [], py = [];
-    xs.forEach(function (x, i) { if (isNum(x) && isNum(ys[i])) { px.push(x); py.push(ys[i]); } });
+    var px = [],
+      py = [];
+    xs.forEach(function (x, i) {
+      if (isNum(x) && isNum(ys[i])) {
+        px.push(x);
+        py.push(ys[i]);
+      }
+    });
     var n = px.length;
     if (n < 3) return null;
-    var mx = px.reduce(function (a, b) { return a + b; }, 0) / n;
-    var my = py.reduce(function (a, b) { return a + b; }, 0) / n;
-    var sxy = 0, sxx = 0, syy = 0;
+    var mx =
+      px.reduce(function (a, b) {
+        return a + b;
+      }, 0) / n;
+    var my =
+      py.reduce(function (a, b) {
+        return a + b;
+      }, 0) / n;
+    var sxy = 0,
+      sxx = 0,
+      syy = 0;
     for (var i = 0; i < n; i++) {
-      sxy += (px[i] - mx) * (py[i] - my); sxx += (px[i] - mx) * (px[i] - mx); syy += (py[i] - my) * (py[i] - my);
+      sxy += (px[i] - mx) * (py[i] - my);
+      sxx += (px[i] - mx) * (px[i] - mx);
+      syy += (py[i] - my) * (py[i] - my);
     }
     return sxx === 0 || syy === 0 ? null : sxy / Math.sqrt(sxx * syy);
   }
@@ -209,8 +238,15 @@
       var t = ms(e.detected_at);
       if (t === null) return;
       for (var i = 0; i < history.length; i++) {
-        var h = history[i], s = ms(h.start_at), en = h.end_at ? ms(h.end_at) : null;
-        if (h.trap_id === e.trap_id && s !== null && t >= s && (en === null || t < en)) {
+        var h = history[i],
+          s = ms(h.start_at),
+          en = h.end_at ? ms(h.end_at) : null;
+        if (
+          h.trap_id === e.trap_id &&
+          s !== null &&
+          t >= s &&
+          (en === null || t < en)
+        ) {
           out[h.location_id] = (out[h.location_id] || 0) + 1;
           break;
         }
@@ -224,7 +260,9 @@
     var t = ms(iso);
     if (t === null) return "—";
     var s = String(iso);
-    return kstDate(t) === kstDate(nowMs - 1) ? s.slice(11, 16) : s.slice(5, 10) + " " + s.slice(11, 16);
+    return kstDate(t) === kstDate(nowMs - 1)
+      ? s.slice(11, 16)
+      : s.slice(5, 10) + " " + s.slice(11, 16);
   }
 
   /** eCO₂ 판정. 값이 없으면 판정하지 않는다(null). */
@@ -238,29 +276,57 @@
       var s = v === null || v === undefined ? "" : String(v);
       return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
     }
-    return [header].concat(rows).map(function (r) { return r.map(q).join(","); }).join("\r\n");
+    return [header]
+      .concat(rows)
+      .map(function (r) {
+        return r.map(q).join(",");
+      })
+      .join("\r\n");
   }
 
   function fmtInt(v) {
     return isNum(v) ? Math.round(v).toLocaleString("en-US") : "—";
   }
 
-
   /** 트랩별 화면용 묶음: 위치·추천 판정·최신 측정값·마지막 감지·작동 상태 */
   function trapViews(ctx) {
-    var locs = {}, recs = {};
-    ctx.locations.forEach(function (l) { locs[l.location_id] = l; });
-    ((ctx.recs && ctx.recs.recommendations) || []).forEach(function (r) { recs[r.trap_id] = r; });
+    var locs = {},
+      recs = {};
+    ctx.locations.forEach(function (l) {
+      locs[l.location_id] = l;
+    });
+    ((ctx.recs && ctx.recs.recommendations) || []).forEach(function (r) {
+      recs[r.trap_id] = r;
+    });
     var read = latestBy(ctx.readings, "trap_id", "measured_at");
     var last = latestBy(ctx.events, "trap_id", "detected_at");
     return ctx.traps.map(function (t) {
-      return { trap: t, loc: locs[t.location_id] || null, rec: recs[t.trap_id] || null,
-        reading: read[t.trap_id] || null, lastEvent: last[t.trap_id] || null,
-        state: trapState(t, ctx.now, recs[t.trap_id]) };
+      return {
+        trap: t,
+        loc: locs[t.location_id] || null,
+        rec: recs[t.trap_id] || null,
+        reading: read[t.trap_id] || null,
+        lastEvent: last[t.trap_id] || null,
+        state: trapState(t, ctx.now, recs[t.trap_id]),
+      };
     });
   }
 
+  /** 추천 방식의 외부 공개 데이터 검증 요약 (docs 보고서와 같은 내용, 수치는 data/processed/*_results.json). */
+  var VALIDATION = {
+    badge: "외부 공개 데이터 기반 검증",
+    summary:
+      "공개 야생동물 데이터 2종(설치류 GPS, 도시 쥐 카메라트랩)에서 과거 활동 빈도 기반 예측은 무작위보다 약 2~4배 잘 맞았고, GBM·RF 등 머신러닝은 이를 넘지 못했습니다. 그래서 추천은 활동 빈도 기반 통계 방식을 유지합니다.",
+    caveats: [
+      "포획 정보가 없는 데이터라 포획 성공은 검증하지 못했습니다. 포획 지표는 가상 데이터 기반 추정입니다.",
+      "설치류 4종(쥐 제외)의 야외 GPS와 독일 도시 카메라 24곳이 근거이며, 우리 설치 환경과 같지 않습니다.",
+      "카메라 데이터에서 관측 기간을 늘려도 지점 순위 안정성은 오르지 않았습니다(순위상관 약 0.45). 최소 관측일 기준은 실제 설치 데이터가 쌓이면 확정합니다.",
+      "비교 표본이 작아 모델 간 작은 차이는 구분되지 않습니다.",
+    ],
+  };
+
   var api = {
+    VALIDATION: VALIDATION,
     STATUS: STATUS,
     statusMeta: statusMeta,
     sortRecommendations: sortRecommendations,
@@ -273,10 +339,22 @@
     basisInfo: basisInfo,
     detectionLabel: detectionLabel,
     chartRows: chartRows,
-    ms: ms, kstDate: kstDate, TRAP_STATE: TRAP_STATE, trapState: trapState, latestBy: latestBy,
-    inWindow: inWindow, hourOfDay: hourOfDay, dailyCounts: dailyCounts, dailyAvg: dailyAvg,
-    pearson: pearson, locationCounts: locationCounts, fmtRecent: fmtRecent, ecoJudge: ecoJudge,
-    toCsv: toCsv, fmtInt: fmtInt, trapViews: trapViews,
+    ms: ms,
+    kstDate: kstDate,
+    TRAP_STATE: TRAP_STATE,
+    trapState: trapState,
+    latestBy: latestBy,
+    inWindow: inWindow,
+    hourOfDay: hourOfDay,
+    dailyCounts: dailyCounts,
+    dailyAvg: dailyAvg,
+    pearson: pearson,
+    locationCounts: locationCounts,
+    fmtRecent: fmtRecent,
+    ecoJudge: ecoJudge,
+    toCsv: toCsv,
+    fmtInt: fmtInt,
+    trapViews: trapViews,
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.DashModel = api;

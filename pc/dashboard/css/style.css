@@ -1173,3 +1173,9 @@ form > .panel + .panel {
 form > .actions {
   margin-top: 16px;
 }
+.val-list {
+  margin: 4px 0 0;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}

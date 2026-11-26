@@ -356,5 +356,19 @@
       wrap.appendChild(side);
     }
     main.appendChild(wrap);
+
+    var V = M.VALIDATION,
+      vp = U.panel(
+        "추천 방식 검증 근거",
+        null,
+        el("span", "tag-outline", V.badge),
+      );
+    add(vp, el("p", null, V.summary));
+    var vl = el("ul", "val-list");
+    V.caveats.forEach(function (c) {
+      vl.appendChild(el("li", null, c));
+    });
+    add(vp, el("h4", null, "한계"), vl);
+    main.appendChild(vp);
   });
 })();

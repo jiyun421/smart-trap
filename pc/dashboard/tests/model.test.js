@@ -178,3 +178,9 @@ test("eCO₂ 판정·최근 시각 표기·CSV", () => {
   assert.equal(M.fmtRecent(null, NOW), "—");
   assert.equal(M.toCsv(["a", "b"], [[1, null], ['x,"y"', 2]]), 'a,b\r\n1,\r\n"x,""y""",2');
 });
+
+test("검증 근거: 배지·요약·한계가 있고 포획은 가상 추정이라고 밝힌다", () => {
+  const v = M.VALIDATION;
+  assert.ok(v.badge && v.summary && v.caveats.length >= 3);
+  assert.ok(v.caveats.some((c) => c.includes("가상 데이터 기반 추정")));
+});
