@@ -1,0 +1,25 @@
+[Unit]
+Description=IOT Trap Flask backend
+After=network.target
+
+[Service]
+Type=simple
+User=iot-trap
+Group=iot-trap
+WorkingDirectory=/opt/iot-trap
+Environment=TRAP_BIND=0.0.0.0:5000
+EnvironmentFile=/etc/iot-trap/backend.env
+StateDirectory=iot-trap
+StateDirectoryMode=0750
+UMask=0077
+ExecStartPre=/opt/iot-trap/.venv/bin/flask --app app migrate
+ExecStart=/opt/iot-trap/.venv/bin/gunicorn --bind ${TRAP_BIND} --workers 2 --threads 2 --access-logfile - --error-logfile - app:create_app()
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
