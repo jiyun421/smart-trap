@@ -106,9 +106,18 @@ test("차트 행: 결측값은 null 유지, 데이터 부족 표시", () => {
 });
 
 test("감지 통계 제목은 실제/가상을 구분한다", () => {
-  assert.equal(M.detectionLabel({ detection_data: "actual" }), "실제 감지 데이터");
-  assert.equal(M.detectionLabel({ detection_data: "synthetic" }), "가상 감지 데이터");
-  assert.equal(M.detectionLabel({ detection_data: "mixed" }), "감지 데이터 (실제+가상 혼합)");
+  assert.equal(
+    M.detectionLabel({ detection_data: "actual" }),
+    "실제 감지 데이터",
+  );
+  assert.equal(
+    M.detectionLabel({ detection_data: "synthetic" }),
+    "가상 감지 데이터",
+  );
+  assert.equal(
+    M.detectionLabel({ detection_data: "mixed" }),
+    "감지 데이터 (실제+가상 혼합)",
+  );
   assert.equal(M.detectionLabel(undefined), "감지 데이터");
 });
 
@@ -116,10 +125,17 @@ test("감지 통계 제목은 실제/가상을 구분한다", () => {
 const NOW = Date.parse("2026-05-10T12:00:00+09:00");
 
 test("트랩 상태: 통신 없음/30분 초과 → 오프라인, 비정상·device_check → 점검 필요", () => {
-  const t = (over) => ({ status: "operating", last_seen_at: "2026-05-10T11:50:00+09:00", ...over });
+  const t = (over) => ({
+    status: "operating",
+    last_seen_at: "2026-05-10T11:50:00+09:00",
+    ...over,
+  });
   assert.equal(M.trapState(t(), NOW), "ok");
   assert.equal(M.trapState(t({ last_seen_at: null }), NOW), "off");
-  assert.equal(M.trapState(t({ last_seen_at: "2026-05-10T11:20:00+09:00" }), NOW), "off");
+  assert.equal(
+    M.trapState(t({ last_seen_at: "2026-05-10T11:20:00+09:00" }), NOW),
+    "off",
+  );
   assert.equal(M.trapState(t({ status: "maintenance" }), NOW), "warn");
   assert.equal(M.trapState(t(), NOW, { status: "device_check" }), "warn");
 });
@@ -135,9 +151,16 @@ test("시간대별·일별 집계와 구간은 [from, to)", () => {
   assert.equal(h[3], 2);
   assert.equal(h[23], 1);
   const d = M.dailyCounts(ev, NOW, 2);
-  assert.deepEqual(d.map((x) => x.count), [1, 2]);
+  assert.deepEqual(
+    d.map((x) => x.count),
+    [1, 2],
+  );
   assert.equal(M.inWindow(ev, "detected_at", NOW - 86400000, NOW).length, 3);
-  assert.equal(M.inWindow(ev, "detected_at", Date.parse("2026-05-10T03:50:00+09:00"), NOW).length, 1);
+  assert.equal(
+    M.inWindow(ev, "detected_at", Date.parse("2026-05-10T03:50:00+09:00"), NOW)
+      .length,
+    1,
+  );
 });
 
 test("일별 평균: 데이터 없으면 0이 아니라 null, 결측값은 제외", () => {
@@ -146,7 +169,10 @@ test("일별 평균: 데이터 없으면 0이 아니라 null, 결측값은 제�
     { measured_at: "2026-05-10T02:00:00+09:00", temperature_c: null },
     { measured_at: "2026-05-10T03:00:00+09:00", temperature_c: 20 },
   ];
-  assert.deepEqual(M.dailyAvg(r, "temperature_c", ["2026-05-09", "2026-05-10"]), [null, 15]);
+  assert.deepEqual(
+    M.dailyAvg(r, "temperature_c", ["2026-05-09", "2026-05-10"]),
+    [null, 15],
+  );
 });
 
 test("피어슨: 완전 상관 1, 짝 3개 미만·분산 0은 null", () => {
@@ -158,8 +184,18 @@ test("피어슨: 완전 상관 1, 짝 3개 미만·분산 0은 null", () => {
 
 test("위치별 감지: 감지 시각에 트랩이 있던 위치로 집계", () => {
   const hist = [
-    { trap_id: "A", location_id: "L1", start_at: "2026-05-01T00:00:00+09:00", end_at: "2026-05-05T00:00:00+09:00" },
-    { trap_id: "A", location_id: "L2", start_at: "2026-05-05T00:00:00+09:00", end_at: null },
+    {
+      trap_id: "A",
+      location_id: "L1",
+      start_at: "2026-05-01T00:00:00+09:00",
+      end_at: "2026-05-05T00:00:00+09:00",
+    },
+    {
+      trap_id: "A",
+      location_id: "L2",
+      start_at: "2026-05-05T00:00:00+09:00",
+      end_at: null,
+    },
   ];
   const ev = [
     { trap_id: "A", detected_at: "2026-05-04T10:00:00+09:00" },
@@ -176,7 +212,45 @@ test("eCO₂ 판정·최근 시각 표기·CSV", () => {
   assert.equal(M.fmtRecent("2026-05-10T09:05:00+09:00", NOW), "09:05");
   assert.equal(M.fmtRecent("2026-05-08T09:05:00+09:00", NOW), "05-08 09:05");
   assert.equal(M.fmtRecent(null, NOW), "—");
-  assert.equal(M.toCsv(["a", "b"], [[1, null], ['x,"y"', 2]]), 'a,b\r\n1,\r\n"x,""y""",2');
+  assert.equal(
+    M.toCsv(
+      ["a", "b"],
+      [
+        [1, null],
+        ['x,"y"', 2],
+      ],
+    ),
+    'a,b\r\n1,\r\n"x,""y""",2',
+  );
+});
+
+test("외부 데이터 지도: 위쪽 줄이 y가 큰 칸이고 최댓값 대비 진하기를 준다", () => {
+  const cells = M.externalGrid([0.1, 0.4, 0.3, 0.2], 2);
+  // 칸 번호 = x * n + y, 화면 순서는 위(y 큰 쪽)부터 왼쪽→오른쪽
+  assert.deepEqual(
+    cells.map((c) => c.id),
+    [1, 3, 0, 2],
+  );
+  assert.equal(cells[0].level, 1);
+  assert.equal(cells[2].share, 0.1);
+});
+
+test("가상 트랩 이동: 2배 이상 나은 칸이 있을 때만 옮기고, 비어 있는 추천 칸을 점수 낮은 트랩부터 배정한다", () => {
+  const shares = [0.4, 0.3, 0.2, 0.05, 0.04, 0.01];
+  const traps = [
+    { id: "V-1", cell: 3 }, // 0.125 -> 이동
+    { id: "V-2", cell: 5 }, // 0.025 -> 이동 (먼저 배정)
+    { id: "V-3", cell: 1 }, // 0.75 -> 유지 (추천 칸 1은 사용 중)
+  ];
+  const moves = M.externalMoves(shares, [0, 1, 2], traps);
+  assert.deepEqual(
+    moves.map((m) => m.target),
+    [2, 0, null],
+  );
+  assert.ok(Math.abs(moves[0].score - 0.125) < 1e-9);
+  assert.equal(M.externalMoves(shares, [], traps)[0].target, null);
+  // 추천 칸이 현재 칸의 2배에 못 미치면 제안하지 않는다
+  assert.equal(M.externalMoves(shares, [2], [{ id: "V-1", cell: 1 }])[0].target, null);
 });
 
 test("검증 근거: 배지·요약·한계가 있고 포획은 가상 추정이라고 밝힌다", () => {
