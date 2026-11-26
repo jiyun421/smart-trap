@@ -25,7 +25,8 @@ SOURCE_NOTE = "가상(시뮬레이션) 데이터 기준 · 포획 수치는 실�
 NIGHT_HOURS = {22, 23, 0, 1, 2, 3, 4, 5}
 
 _FONT_CANDIDATES = [
-    "/mnt/c/Windows/Fonts/malgun.ttf",
+    "C:/Windows/Fonts/malgun.ttf",      # Windows에서 직접 실행
+    "/mnt/c/Windows/Fonts/malgun.ttf",  # WSL
     "/usr/share/fonts/truetype/nanum/NanumGothic.ttf",
 ]
 
