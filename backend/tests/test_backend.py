@@ -236,6 +236,46 @@ class BackendTest(unittest.TestCase):
         history = self.read("recommendations?limit=1")
         self.assertEqual((history["items"][0]["run_id"], history["next_offset"]), ("run-2", 1))
 
+    def test_read_auth_can_be_turned_off_without_opening_writes(self):
+        client = create_app(dict(self.config, READ_AUTH="off")).test_client()
+        self.assertEqual(client.get("/api/traps").status_code, 200)
+        self.assertEqual(client.get("/api/deployments").status_code, 200)
+        self.assertEqual(client.post("/api/sensor/data", json=self.event("t1")).status_code, 401)
+        self.assertEqual(client.post("/api/recommendations", json={}).status_code, 401)
+        self.assertEqual(self.client.get("/api/traps").status_code, 401)
+        with self.assertRaisesRegex(RuntimeError, "TRAP_READ_AUTH"):
+            create_app(dict(self.config, READ_AUTH="maybe"))
+
+    def test_deployment_history_includes_relocation(self):
+        self.cli("registry", "deploy", "dep-2", "trap-1", "b", "rat", "2026-01-05T00:00:00Z")
+        items = self.read("deployments?trap_id=trap-1")["items"]
+        self.assertEqual([(d["deployment_id"], d["location_id"]) for d in items], [("dep-1", "a"), ("dep-2", "b")])
+        self.assertEqual((items[0]["ended_at"], items[1]["ended_at"]), ("2026-01-05T00:00:00.000000Z", None))
+        self.read("deployments?trap_id=missing", 404)
+
+    def test_recommendation_keeps_data_basis_and_details(self):
+        run = dict(run_id="run-basis", trap_id="trap-1", target_species="rat", model_version="score-v0.1",
+                   generated_at="2026-01-03T00:01:00Z", prediction_kind="target_entry",
+                   data_from="2026-01-02T00:00:00Z", data_to="2026-01-03T00:00:00Z",
+                   forecast_from="2026-01-03T01:00:00Z", forecast_to="2026-01-04T01:00:00Z",
+                   status="ready", score_type="relative_score",
+                   candidates=[dict(location_id="b", rank=1, score=0.8, reason="PC 분석")],
+                   data_basis=dict(detection_data="actual", capture_data="synthetic", is_simulation_based=True,
+                                   note="포획 수치는 가상 데이터 기반"),
+                   details=dict(decision="recommended", simulated_stats=dict(captures=6)))
+
+        def submit(payload, expected):
+            response = self.client.post("/api/recommendations", json=payload, headers=WRITE)
+            self.assertEqual(response.status_code, expected, response.get_data(as_text=True))
+
+        submit(dict(run, data_basis=dict(run["data_basis"], is_simulation_based="yes")), 400)
+        submit(dict(run, data_basis=dict(run["data_basis"], capture_data="real")), 400)
+        submit(dict(run, data_basis={"note": "x"}), 400)
+        submit(dict(run, details=[1]), 400)
+        submit(run, 201)
+        stored = self.read("recommendations/latest?trap_id=trap-1")
+        self.assertEqual((stored["data_basis"], stored["details"]), (run["data_basis"], run["details"]))
+
     def test_dashboard_build_and_api_coexist(self):
         build = self.root / "dist"
         (build / "assets").mkdir(parents=True)

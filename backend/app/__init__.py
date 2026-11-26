@@ -17,6 +17,7 @@ def create_app(config=None):
         DEVICE_TOKENS=os.environ.get("TRAP_DEVICE_TOKENS", "{}"),
         READ_TOKEN=os.environ.get("TRAP_READ_TOKEN", ""),
         RECOMMENDATION_TOKEN=os.environ.get("TRAP_RECOMMENDATION_TOKEN", ""),
+        READ_AUTH=os.environ.get("TRAP_READ_AUTH", "required"),
         DASHBOARD_DIR=os.environ.get("TRAP_DASHBOARD_DIR"),
         MAX_CONTENT_LENGTH=64 * 1024,
     )
@@ -48,6 +49,8 @@ def create_app(config=None):
 
 
 def configure_tokens(app):
+    if app.config["READ_AUTH"] not in ("required", "off"):
+        raise RuntimeError("TRAP_READ_AUTH must be 'required' or 'off'")
     devices = app.config["DEVICE_TOKENS"]
     if isinstance(devices, str):
         try:

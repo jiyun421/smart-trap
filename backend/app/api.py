@@ -28,6 +28,9 @@ def disable_api_cache(response):
 
 
 def authorize(role):
+    # TRAP_READ_AUTH=off: GET 조회는 토큰 없이 허용한다(같은 LAN의 대시보드용). 쓰기 API는 항상 토큰이 필요하다.
+    if role == "read" and current_app.config["READ_AUTH"] == "off":
+        return None
     scheme, _, token = request.headers.get("Authorization", "").partition(" ")
     if scheme.lower() != "bearer" or not token or not token.isascii():
         raise ApiError(401, "unauthorized", "A valid bearer token is required")
@@ -57,6 +60,12 @@ def ingest():
 def traps():
     authorize("read")
     return queries.traps(get_db())
+
+
+@api.get("/deployments")
+def deployments():
+    authorize("read")
+    return queries.deployments(get_db())
 
 
 @api.get("/traps/<trap_id>/status")
