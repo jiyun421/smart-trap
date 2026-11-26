@@ -38,7 +38,7 @@
     var all = el("a", "small-link", "전체 보기"); all.href = "monitoring.html";
     var p1 = U.panel("트랩별 상태", null, all);
     p1.appendChild(U.table(["트랩 ID", "설치 위치", "상태", "최근 감지"], views.map(function (v) {
-      return [v.trap.trap_id, v.loc ? v.loc.name : v.trap.location_id, U.stateBadge(v.state),
+      return [v.trap.trap_id + (v.trap.is_virtual ? " · 가상" : ""), v.loc ? v.loc.name : v.trap.location_id, U.stateBadge(v.state),
         v.lastEvent ? M.fmtRecent(v.lastEvent.detected_at, now) : "—"];
     })));
 

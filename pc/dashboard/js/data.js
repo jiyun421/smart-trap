@@ -73,7 +73,7 @@
           var byTrap = {};
           r[0].forEach(function (t, i) { byTrap[t.trap_id] = statuses[i]; });
           var ctx = root.DashAdapter.build({ traps: r[0], statuses: byTrap, locations: r[1], deployments: r[2],
-            readings: r[3], visits: r[4], runs: r[5] });
+            readings: r[3], visits: r[4], runs: r[5], layout: cfg.layout, realTrapIds: cfg.realTrapIds });
           ctx.now = now;
           ctx.serverTime = new Date(now).toISOString();
           ctx.source = "api";
