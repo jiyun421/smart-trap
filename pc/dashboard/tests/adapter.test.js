@@ -41,3 +41,19 @@ test("추천: 마지막 배치만, 판정·점수 복원, 가상 표시 유지",
   assert.equal(typeof byTrap["TRAP-02"].score, "number");
   assert.equal(A.recommendations([]), null);
 });
+
+test("지도 좌표는 layout 설정에서, 가상 트랩은 realTrapIds 밖의 트랩", () => {
+  const traps = fx("traps").items;
+  const locations = fx("locations").items;
+  const base = { traps, statuses: {}, locations, deployments: fx("deployments").items, readings: [], visits: [], runs: [] };
+  const plain = A.build(base);
+  assert.ok(plain.locations.every((l) => l.x === null && l.y === null));
+  assert.ok(plain.traps.every((t) => t.is_virtual === false));
+
+  const id = locations[0].location_id;
+  const ctx = A.build({ ...base, layout: { [id]: { x: 2, y: 3 } }, realTrapIds: ["TRAP-01"] });
+  const loc = ctx.locations.find((l) => l.location_id === id);
+  assert.deepEqual([loc.x, loc.y], [2, 3]);
+  assert.equal(ctx.traps.find((t) => t.trap_id === "TRAP-01").is_virtual, false);
+  assert.ok(ctx.traps.filter((t) => t.trap_id !== "TRAP-01").every((t) => t.is_virtual));
+});

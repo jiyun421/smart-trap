@@ -168,6 +168,10 @@
     }
 
     // 트랩 핀 (같은 위치의 트랩은 옆으로 나란히)
+    var virt = {};
+    ctx.traps.forEach(function (t) {
+      virt[t.trap_id] = t.is_virtual;
+    });
     var pins = ctx.traps.map(function (t) {
       return { id: t.trap_id, loc: t.location_id };
     });
@@ -209,7 +213,11 @@
       add(
         node,
         el("span", "pin-dot"),
-        el("span", "pin-label", p.id + (isRev ? " · 검토" : "")),
+        el(
+          "span",
+          "pin-label",
+          p.id + (virt[p.id] ? " · 가상" : "") + (isRev ? " · 검토" : ""),
+        ),
       );
       map.appendChild(node);
     });

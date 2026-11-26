@@ -88,8 +88,9 @@
     };
   }
 
-  /** 설치된 적 없는 위치를 후보로 본다. 지도 좌표(x, y)는 백엔드에 없어 null이다. */
-  function locationRows(locations, deployments) {
+  /** 설치된 적 없는 위치를 후보로 본다. 지도 좌표(x, y)는 백엔드에 없어 layout(설정)에서 가져오고, 없으면 null이다. */
+  function locationRows(locations, deployments, layout) {
+    layout = layout || {};
     var used = {};
     deployments.forEach(function (d) {
       used[d.location_id] = true;
@@ -99,8 +100,8 @@
         location_id: l.location_id,
         name: l.name,
         is_candidate: !used[l.location_id],
-        x: null,
-        y: null,
+        x: layout[l.location_id] ? layout[l.location_id].x : null,
+        y: layout[l.location_id] ? layout[l.location_id].y : null,
       };
     });
   }
@@ -149,13 +150,16 @@
     };
   }
 
-  /** raw: { traps, statuses{trap_id: status}, locations, deployments, readings, visits, runs } (모두 items 배열) */
+  /** raw: { traps, statuses{trap_id: status}, locations, deployments, readings, visits, runs, layout?, realTrapIds? }
+   *  realTrapIds가 배열이면 그 밖의 트랩은 가상(is_virtual)으로 표시한다. */
   function build(raw) {
     return {
       traps: raw.traps.map(function (t) {
-        return trapRow(t, raw.statuses[t.trap_id]);
+        var row = trapRow(t, raw.statuses[t.trap_id]);
+        row.is_virtual = !!raw.realTrapIds && raw.realTrapIds.indexOf(t.trap_id) < 0;
+        return row;
       }),
-      locations: locationRows(raw.locations, raw.deployments),
+      locations: locationRows(raw.locations, raw.deployments, raw.layout),
       history: raw.deployments.map(historyRow),
       readings: raw.readings.map(readingRow),
       events: raw.visits.map(eventRow),

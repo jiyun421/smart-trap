@@ -55,7 +55,7 @@
         var title = el("div");
         add(
           title,
-          el("h3", null, v.trap.trap_id),
+          el("h3", null, v.trap.trap_id + (v.trap.is_virtual ? " · 가상" : "")),
           el("span", "muted", v.loc ? v.loc.name : v.trap.location_id),
         );
         add(card, add(head, title, U.stateBadge(v.state)));
