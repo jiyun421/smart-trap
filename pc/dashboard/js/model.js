@@ -325,7 +325,52 @@
     ],
   };
 
+  /** 외부 데이터 지도 칸. 칸 번호는 x * n + y. 화면 순서(위→아래, 왼쪽→오른쪽)로 돌려주며 level은 최댓값 대비 진하기. */
+  function externalGrid(shares, n) {
+    var max = Math.max.apply(null, shares);
+    var cells = [];
+    for (var y = n - 1; y >= 0; y--)
+      for (var x = 0; x < n; x++) {
+        var id = x * n + y;
+        cells.push({ id: id, share: shares[id], level: max > 0 ? shares[id] / max : 0 });
+      }
+    return cells;
+  }
+
+  /** 가상 트랩 이동 제안. 점수 = 칸의 예측 비중 / 최고 칸 비중. 현재 칸이 옮길 칸의 50% 이하(기존 추천의 설계값)일
+   * 때만 제안하고, 점수가 낮은 트랩부터 비어 있는 추천 칸을 순위대로 배정한다. 이후 실제 활동은 보지 않는다. */
+  function externalMoves(shares, recommended, traps) {
+    var max = Math.max.apply(null, shares);
+    var taken = traps.map(function (t) {
+      return t.cell;
+    });
+    var moves = traps.map(function (t) {
+      return {
+        id: t.id,
+        cell: t.cell,
+        score: max > 0 ? shares[t.cell] / max : 0,
+        target: null,
+      };
+    });
+    moves
+      .slice()
+      .sort(function (a, b) {
+        return a.score - b.score;
+      })
+      .forEach(function (m) {
+        var free = recommended.filter(function (c) {
+          return taken.indexOf(c) < 0 && shares[c] >= 2 * shares[m.cell];
+        })[0];
+        if (free === undefined) return; // 옮길 만한 빈 추천 칸이 없다
+        m.target = free;
+        taken.push(free);
+      });
+    return moves;
+  }
+
   var api = {
+    externalMoves: externalMoves,
+    externalGrid: externalGrid,
     VALIDATION: VALIDATION,
     STATUS: STATUS,
     statusMeta: statusMeta,
