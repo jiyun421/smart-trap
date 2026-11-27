@@ -124,7 +124,7 @@ test("감지 통계 제목은 실제/가상을 구분한다", () => {
 // ---- 리디자인에서 추가된 함수 ----
 const NOW = Date.parse("2026-05-10T12:00:00+09:00");
 
-test("트랩 상태: 통신 없음/30분 초과 → 오프라인, 비정상·device_check → 점검 필요", () => {
+test("트랩 상태: 통신 없음/35분 초과 → 오프라인, 비정상·device_check → 점검 필요", () => {
   const t = (over) => ({
     status: "operating",
     last_seen_at: "2026-05-10T11:50:00+09:00",
@@ -134,6 +134,15 @@ test("트랩 상태: 통신 없음/30분 초과 → 오프라인, 비정상·dev
   assert.equal(M.trapState(t({ last_seen_at: null }), NOW), "off");
   assert.equal(
     M.trapState(t({ last_seen_at: "2026-05-10T11:20:00+09:00" }), NOW),
+    "off",
+  );
+  // 30분 주기 전송이라 35분까지는 오프라인이 아니다.
+  assert.equal(
+    M.trapState(t({ last_seen_at: "2026-05-10T11:26:00+09:00" }), NOW),
+    "ok",
+  );
+  assert.equal(
+    M.trapState(t({ last_seen_at: "2026-05-10T11:24:00+09:00" }), NOW),
     "off",
   );
   assert.equal(M.trapState(t({ status: "maintenance" }), NOW), "warn");
@@ -257,4 +266,21 @@ test("검증 근거: 배지·요약·한계가 있고 포획은 가상 추정이
   const v = M.VALIDATION;
   assert.ok(v.badge && v.summary && v.caveats.length >= 3);
   assert.ok(v.caveats.some((c) => c.includes("가상 데이터 기반 추정")));
+});
+
+test("지도 위치: 설정 좌표를 지도 %로 바꾸고, 같은 지점을 외부 데이터 격자 칸으로 옮긴다", () => {
+  const locations = [
+    { location_id: "a", x: 1, y: 1 },
+    { location_id: "b", x: 7, y: 4 },
+    { location_id: "c", x: null, y: null },
+  ];
+  const pos = M.mapPosition(locations);
+  assert.deepEqual(pos("a"), { x: 20, y: 24 });
+  assert.deepEqual(pos("b"), { x: 80, y: 66 });
+  assert.equal(pos("c"), null);
+  assert.equal(pos("없음"), null);
+  // 칸 번호 = x * 8 + y, y는 아래가 0 (화면 %는 위가 0)
+  assert.equal(M.mapCell(pos("a"), 8), 1 * 8 + 6);
+  assert.equal(M.mapCell(pos("b"), 8), 6 * 8 + 2);
+  assert.equal(M.mapCell({ x: 100, y: 100 }, 8), 7 * 8 + 0);
 });

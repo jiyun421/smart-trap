@@ -79,7 +79,7 @@
     var p3 = U.panel("최근 알림", "이벤트에서 파생");
     var items = [];
     ctx.events.forEach(function (e) {
-      if (e.classification === "rat") items.push({ t: e.detected_at, kind: "감지", cls: "teal", text: e.trap_id + " 목표종(쥐) 식별 · 신뢰도 " + M.fmtNum(e.confidence, 2) });
+      if (e.classification === "rat") items.push({ t: e.detected_at, kind: "감지", cls: "teal", text: e.trap_id + " 목표종(쥐) 식별" + (typeof e.confidence === "number" ? " · 신뢰도 " + M.fmtNum(e.confidence, 2) : "") });
       else if (e.classification === "non_rat") items.push({ t: e.detected_at, kind: "비목표", cls: "off", text: e.trap_id + " 비목표종 진입" });
     });
     views.forEach(function (v) {
@@ -107,7 +107,7 @@
     add(p4, env, el("p", "muted", "온습도 센서 기준 · 트랩별 값은 트랩 모니터링에서 확인"));
 
     var p5 = U.panel("포획물 부패 확인", "eCO₂");
-    p5.appendChild(el("p", "muted", "포획 여부 정보가 없어 전체 트랩의 최신 eCO₂를 표시합니다. 수거 권장 기준 " + M.fmtInt(st.eco2Threshold) + "ppm 이상"));
+    p5.appendChild(el("p", "muted", "포획 여부 정보가 없어 전체 트랩의 최신 eCO₂(참고값)를 표시합니다. 수거 권장 기준 " + M.fmtInt(st.eco2Threshold) + "ppm 이상"));
     var eco = el("div", "eco-list");
     views.forEach(function (v) {
       var j = v.reading ? M.ecoJudge(v.reading.eco2_ppm, st.eco2Threshold) : null;

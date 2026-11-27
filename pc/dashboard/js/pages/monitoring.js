@@ -86,17 +86,26 @@
         add(
           card,
           row("온도 / 습도", env),
-          row("로드셀", load),
+          row("미끼 무게", load),
           row("도어", door),
           row(
             "eCO₂",
             r ? M.fmtInt(r.eco2_ppm) + "ppm" : "—",
-            eco === "collect" ? "· 수거 권장" : "",
+            eco === "collect" ? "· 참고값 · 수거 권장" : "· 참고값",
+          ),
+          row(
+            "TVOC",
+            r && typeof r.tvoc_ppb === "number"
+              ? M.fmtInt(r.tvoc_ppb) + "ppb"
+              : "—",
+            "· 참고값",
           ),
           row(
             "최근 AI 식별",
             ai,
-            ev ? "· 신뢰도 " + M.fmtNum(ev.confidence, 2) : "",
+            ev && typeof ev.confidence === "number"
+              ? "· 신뢰도 " + M.fmtNum(ev.confidence, 2)
+              : "",
           ),
           row("최근 감지", ev ? M.fmtRecent(ev.detected_at, now) : "—"),
           row(
@@ -104,12 +113,12 @@
             v.trap.last_seen_at ? M.fmtRecent(v.trap.last_seen_at, now) : "—",
           ),
         );
-        if (v.state === "off")
+        if (v.state === "off" && v.trap.last_seen_at)
           card.appendChild(
             el(
               "p",
               "muted",
-              "마지막 통신이 30분 넘게 없어 센서 값은 마지막 수신값입니다.",
+              "마지막 통신이 35분 넘게 없어 센서 값은 마지막 수신값입니다.",
             ),
           );
         list.appendChild(card);

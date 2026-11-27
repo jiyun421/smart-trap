@@ -1,0 +1,16 @@
+[Unit]
+Description=IOT Trap recommendation update
+Wants=iot-trap.service
+After=network.target iot-trap.service
+
+[Service]
+Type=oneshot
+User=iot-trap
+Group=iot-trap
+WorkingDirectory=/opt/iot-trap/pc
+EnvironmentFile=/etc/iot-trap/backend.env
+ExecStart=/opt/iot-trap/pc/.venv/bin/python -m src.update_recommendations
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true

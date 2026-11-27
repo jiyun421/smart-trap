@@ -7,9 +7,16 @@ window.DASHBOARD_CONFIG = {
   apiBase: null,
   mockDir: "../data/mock",
   // 지도 좌표: 백엔드 위치에는 좌표가 없어 여기서 지정한다(위치 ID -> x, y. 단위는 임의, 상대 배치만 쓴다).
-  layout: {},
+  layout: {
+    "z-kitchen": { x: 7, y: 4 },
+    "LOC-A": { x: 1, y: 1 },
+    "LOC-B": { x: 4, y: 1 },
+    "LOC-C": { x: 7, y: 1 },
+    "LOC-D": { x: 1, y: 4 },
+    "LOC-E": { x: 4, y: 4 },
+  },
   // 실제 트랩 ID 목록. 배열을 지정하면 그 밖의 트랩에 "가상" 표시를 붙인다. null이면 표시하지 않는다.
-  realTrapIds: null,
+  realTrapIds: ["TRAP-01"],
   historyDays: 14,
   refreshMs: 10000,
 };

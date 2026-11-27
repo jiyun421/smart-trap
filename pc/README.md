@@ -23,9 +23,10 @@
 - 대시보드: 백엔드가 `TRAP_DASHBOARD_DIR`로 `pc/dashboard`를 제공하면 `dashboard/js/config.js`의 `apiBase`를 `"/"`(같은 오리진)로 설정합니다. `null`이면 Mock 데이터를 씁니다. 토큰 없이 읽으려면 백엔드에 `TRAP_READ_AUTH=off`가 필요합니다.
 - 추천 저장: `from src.backend_client import backend_client` → `export_recommendations(summary, backend_client("http://<Pi>:5000", read_token=..., write_token=...))`. 트랩마다 run 하나로 변환되며 가상 데이터 표시(`data_basis`)와 실제/가상 통계는 `details`에 보존됩니다.
 - 지도 좌표: 백엔드 위치에는 좌표가 없어 `config.js`의 `layout`(위치 ID → `{x, y}`)으로 지정합니다. 비어 있으면 추천 지도에 마커가 없습니다.
+- 추천 갱신: `python -m src.update_recommendations`가 서버의 최근 28일 기록과 가상 트랩을 합쳐 추천을 계산해 저장합니다(토큰은 환경 변수 `TRAP_READ_TOKEN`, `TRAP_RECOMMENDATION_TOKEN`). Pi에서 하루 한 번 실행하는 설정은 `backend/docs/deploy.md`에 있습니다.
 - 가상 트랩 표시: `config.js`의 `realTrapIds`(예: `["TRAP-01"]`)를 지정하면 그 밖의 트랩에 "가상"이 붙습니다. `null`이면 표시하지 않습니다.
 - 가상 트랩 등록: 추천을 저장하려면 트랩·위치가 백엔드에 등록되어 있어야 합니다. `python -m src.mvp_register`가 가상 시나리오의 등록 명령(`flask registry ...`)을 출력합니다. 실제 트랩과 위치(예: `LOC-REAL-1`)는 따로 등록합니다. 가상 트랩은 센서 이벤트가 없어 대시보드에서 오프라인으로 보입니다.
-- 한계: eCO₂/TVOC는 백엔드에 없어 "—"로 표시되고, `load_cell_g`는 `bait_g`로 대응시켰습니다.
+- 센서 대응: eCO₂/TVOC는 `eco2_ppm`/`tvoc_ppb`(참고값, 보내지 않은 이벤트는 "—"), `load_cell_g`는 `bait_g`(미끼 무게)입니다.
 
 ## 데이터 구분 원칙
 

@@ -24,6 +24,7 @@ sudo apt update
 sudo apt install -y python3 python3-venv git sqlite3 curl tzdata
 sudo install -d -m 0755 /opt/iot-trap
 sudo cp -R app migrations deploy docs README.md requirements.txt .env.example /opt/iot-trap/
+# 갱신 설치라면 복사 후 setup-pi.sh를 다시 실행하고 iot-trap과 iot-trap-mqtt를 재시작합니다.
 cd /opt/iot-trap
 sudo sh deploy/setup-pi.sh
 
@@ -62,6 +63,78 @@ sudo -u iot-trap env TRAP_DB_PATH=/var/lib/iot-trap/traps.sqlite3 \
 ```
 
 PC 담당자의 대시보드 빌드를 `/opt/iot-trap/dashboard/dist`에 배치하고 `TRAP_DASHBOARD_DIR`에 같은 절대 경로를 지정합니다. `index.html`과 빌드 에셋을 해당 디렉터리에 두고 서비스가 읽을 수 있도록 권한을 부여합니다. 대시보드에서는 상대 경로 `/api/...`를 사용합니다.
+
+이 저장소의 대시보드는 빌드 과정이 없습니다. 저장소 최상위에서 복사한 뒤, 복사본의 `apiBase`만 `"/"`로 바꿉니다(저장소의 `null`은 Mock 데이터용입니다). 서비스 환경 파일에 `TRAP_DASHBOARD_DIR=/opt/iot-trap/dashboard/dist`와 `TRAP_READ_AUTH=off`를 지정하고 `iot-trap.service`를 재시작합니다.
+
+```sh
+sudo mkdir -p /opt/iot-trap/dashboard/dist
+sudo cp -R pc/dashboard/*.html pc/dashboard/css pc/dashboard/js pc/dashboard/data pc/dashboard/assets /opt/iot-trap/dashboard/dist/
+sudo sed -i 's/apiBase: null/apiBase: "\/"/' /opt/iot-trap/dashboard/dist/js/config.js
+sudo chmod -R a+rX /opt/iot-trap/dashboard
+```
+
+## ESP32 MQTT 중계
+
+ESP32는 `trap/v1/<trap_id>/event`로 MQTT 발행만 합니다. Pi의 mosquitto가 받고 `app.mqtt_bridge`가 `POST /api/sensor/data`로 옮깁니다. 펌웨어는 브로커 주소 `192.168.0.10:1883`, 계정 없음으로 고정되어 있으므로 공유기에서 Pi에 이 IP를 고정합니다.
+
+```sh
+sudo apt install -y mosquitto mosquitto-clients
+sudo install -m 0644 deploy/mosquitto-trap.conf /etc/mosquitto/conf.d/trap.conf
+sudo systemctl enable mosquitto
+sudo systemctl restart mosquitto
+```
+
+`/etc/iot-trap/backend.env`의 `TRAP_DEVICE_TOKENS`에 펌웨어의 트랩 ID를 대소문자까지 같게 넣습니다(예: `{"TRAP-01":"발급한_장치_토큰"}`). 중계는 이 토큰으로 저장하고, 설치 ID는 서버의 활성 설치를 조회해 채웁니다. `TRAP_READ_AUTH=required`이면 `TRAP_READ_TOKEN`도 필요합니다. 트랩과 설치를 서비스 사용자로 등록합니다. 주기 700초는 오프라인 판정(주기의 3배)을 35분으로 맞춘 값입니다. 설치 시작 시각은 첫 메시지를 받기 전이어야 합니다.
+
+```sh
+flask_registry() { sudo -u iot-trap env TRAP_DB_PATH=/var/lib/iot-trap/traps.sqlite3 /opt/iot-trap/.venv/bin/flask --app app registry "$@"; }
+cd /opt/iot-trap
+flask_registry trap TRAP-01 '현장 트랩' --empty-g 2 --low-g 10 --interval 700
+flask_registry location z-kitchen '주방'
+flask_registry deploy dep-TRAP-01-1 TRAP-01 z-kitchen rat "$(date +%Y-%m-%dT%H:%M:%S%:z)"
+sudo install -m 0644 deploy/iot-trap-mqtt.service /etc/systemd/system/iot-trap-mqtt.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now iot-trap-mqtt.service
+```
+
+`--empty-g`, `--low-g`는 예시입니다. 미끼 접시를 올리고 로드셀을 보정한 뒤 실제 무게에 맞춥니다.
+
+ESP32 없이 확인할 때는 Pi에서 모의 메시지를 발행하고 중계 로그와 상태를 봅니다. 이 이벤트는 DB에 실제 기록으로 남습니다.
+
+```sh
+mosquitto_pub -h 127.0.0.1 -t trap/v1/TRAP-01/event -m '{"trapId":"TRAP-01","location":"z-kitchen","boot":1,"uptimeMs":1000,"result":"periodic","species":0,"command":"stay","door":"open","load_g":null,"temp_c":23.1,"humidity_pct":55.2,"lux":130.0,"battery_mv":null,"eco2":450,"tvoc":12}'
+sudo journalctl -u iot-trap-mqtt.service -n 20 --no-pager
+curl -fsS http://127.0.0.1:5000/api/traps/TRAP-01/status   # TRAP_READ_AUTH=off일 때
+```
+
+## 추천 하루 한 번 갱신
+
+`pc/src/update_recommendations.py`가 서버의 최근 28일(어제까지) 기록을 읽고, 가상 트랩 시나리오를 합쳐 추천을 계산한 뒤 저장합니다. 실제 트랩의 설치 이력이 없으면 저장하지 않고 실패하며, 이전 추천이 남습니다. 가상 트랩과 그 위치도 서버에 등록되어 있어야 합니다(`pc/README.md`). 가상 트랩의 값은 고정이므로 갱신으로 달라지는 입력은 실제 트랩의 기록뿐입니다.
+
+저장소 최상위에서 코드를 복사하고 전용 가상 환경을 만듭니다.
+
+```sh
+sudo mkdir -p /opt/iot-trap/pc
+sudo cp -R pc/src /opt/iot-trap/pc/
+sudo python3 -m venv /opt/iot-trap/pc/.venv
+sudo /opt/iot-trap/pc/.venv/bin/pip install 'pandas<3' numpy scipy requests
+sudo chmod -R a+rX /opt/iot-trap/pc
+sudo install -m 0644 backend/deploy/iot-trap-recommend.service backend/deploy/iot-trap-recommend.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now iot-trap-recommend.timer
+```
+
+`/etc/iot-trap/backend.env`의 `TRAP_RECOMMENDATION_TOKEN`으로 저장합니다. `TRAP_READ_AUTH=required`이면 `TRAP_READ_TOKEN`도 필요하고, `TRAP_BIND`를 특정 IP로 바꿨다면 `TRAP_API_URL=http://<그 IP>:5000`을 추가합니다.
+
+바로 한 번 실행해 결과를 확인하고, 다음 실행 시각을 봅니다.
+
+```sh
+sudo systemctl start iot-trap-recommend.service
+sudo journalctl -u iot-trap-recommend.service -n 30 --no-pager
+systemctl list-timers iot-trap-recommend.timer
+```
+
+간격을 바꾸려면 `/etc/systemd/system/iot-trap-recommend.timer`의 `OnCalendar`를 고친 뒤 `sudo systemctl daemon-reload && sudo systemctl restart iot-trap-recommend.timer`를 실행합니다.
 
 ## SQLite 백업과 복원
 

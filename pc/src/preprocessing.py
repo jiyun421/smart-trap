@@ -49,7 +49,9 @@ def clean_events(rows):
     df = pd.DataFrame(rows)
     report = {"input_rows": len(df), "duplicates_removed": 0, "invalid_time_removed": 0,
               "invalid_class_set_null": 0, "invalid_confidence_set_null": 0}
-    if df.empty:
+    if df.empty:  # 감지가 없어도 이후 단계가 쓰는 컬럼은 있어야 한다
+        df = pd.DataFrame(columns=["event_id", "trap_id", "detected_at", "classification", "confidence"])
+        df["detected_at"] = _to_kst(df["detected_at"])
         return df, report
     before = len(df)
     df = df.drop_duplicates("event_id", keep="first")
@@ -77,6 +79,9 @@ def clean_sensor_readings(rows):
     report = {"input_rows": len(df), "duplicates_removed": 0, "invalid_time_removed": 0,
               "out_of_range_set_null": {k: 0 for k in SENSOR_RANGES}}
     if df.empty:
+        df = pd.DataFrame(columns=["reading_id", "trap_id", "measured_at", *SENSOR_RANGES, "load_cell_g"])
+        df = df.astype({c: float for c in (*SENSOR_RANGES, "load_cell_g")})
+        df["measured_at"] = _to_kst(df["measured_at"])
         return df, report
     before = len(df)
     df = df.drop_duplicates("reading_id", keep="first")
@@ -122,7 +127,7 @@ def operating_hours_by_day(status_logs, history, period_start, period_end):
     - 첫 로그 이전 구간은 상태를 알 수 없으므로 작동 시간에 포함하지 않는다.
     """
     ps, pe = _ts(period_start), _ts(period_end)
-    logs = pd.DataFrame(status_logs)
+    logs = pd.DataFrame(status_logs, columns=["trap_id", "changed_at", "status"])
     logs["changed_at"] = _to_kst(logs["changed_at"])
     acc = {}
     for trap_id, g in logs.dropna(subset=["changed_at"]).sort_values("changed_at").groupby("trap_id"):
@@ -140,7 +145,7 @@ def operating_hours_by_day(status_logs, history, period_start, period_end):
                     acc[key] = acc.get(key, 0.0) + hours
     out = pd.DataFrame([(*k, v) for k, v in acc.items()],
                        columns=["trap_id", "location_id", "date", "operating_hours"])
-    return out
+    return out.astype({"operating_hours": float})
 
 
 def _assign_location(df, time_col, history):
