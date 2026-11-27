@@ -39,20 +39,7 @@
     ctx.locations.forEach(function (l) {
       locs[l.location_id] = l;
     });
-    var xs = ctx.locations.map(function (l) {
-        return l.x;
-      }),
-      ys = ctx.locations.map(function (l) {
-        return l.y;
-      });
-    var maxX = Math.max.apply(null, xs.concat([1])) + 1,
-      maxY = Math.max.apply(null, ys.concat([1])) + 1;
-    function pos(locId) {
-      var l = locs[locId];
-      return l && typeof l.x === "number" && typeof l.y === "number"
-        ? { x: 10 + (l.x / maxX) * 80, y: 10 + (l.y / maxY) * 70 }
-        : null;
-    }
+    var pos = M.mapPosition(ctx.locations);
 
     // 머리말 + 재배치 검토 선택 버튼
     var pills = el("div", "pills");
@@ -208,7 +195,7 @@
         };
       }
       node.style.left =
-        "calc(" + pt.x + "% + " + (n - 1 - (total - 1) / 2) * 56 + "px)";
+        "calc(" + pt.x + "% + " + (n - 1 - (total - 1) / 2) * 110 + "px)";
       node.style.top = "calc(" + pt.y + "% + 34px)";
       add(
         node,

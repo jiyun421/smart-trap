@@ -113,7 +113,7 @@
             v.trap.last_seen_at ? M.fmtRecent(v.trap.last_seen_at, now) : "—",
           ),
         );
-        if (v.state === "off")
+        if (v.state === "off" && v.trap.last_seen_at)
           card.appendChild(
             el(
               "p",

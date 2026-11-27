@@ -68,7 +68,7 @@ PC 담당자의 대시보드 빌드를 `/opt/iot-trap/dashboard/dist`에 배치�
 
 ```sh
 sudo mkdir -p /opt/iot-trap/dashboard/dist
-sudo cp -R pc/dashboard/*.html pc/dashboard/css pc/dashboard/js pc/dashboard/assets /opt/iot-trap/dashboard/dist/
+sudo cp -R pc/dashboard/*.html pc/dashboard/css pc/dashboard/js pc/dashboard/data pc/dashboard/assets /opt/iot-trap/dashboard/dist/
 sudo sed -i 's/apiBase: null/apiBase: "\/"/' /opt/iot-trap/dashboard/dist/js/config.js
 sudo chmod -R a+rX /opt/iot-trap/dashboard
 ```

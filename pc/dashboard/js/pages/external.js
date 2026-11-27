@@ -1,5 +1,6 @@
-/* 05 외부 데이터 기반 추천: 다른 구역으로 학습한 ML(GBM) 모델의 활동 예측으로 가상 트랩의 이동을 제안한다.
- * 데이터는 data/external_map.json (python -m src.movement_transfer 가 생성). 트랩 데이터·기존 추천과 무관하다. */
+/* 05 외부 데이터 기반 추천: 다른 구역으로 학습한 ML(GBM) 모델의 활동 예측으로 트랩의 이동을 제안한다.
+ * 데이터는 data/external_map.json (python -m src.movement_transfer 가 생성). 트랩 ID와 배치는 설치 위치 추천 지도와 같고,
+ * 활동 예측은 트랩 데이터·기존 추천과 무관하다. */
 (function () {
   "use strict";
   var M = DashModel,
@@ -11,15 +12,30 @@
   var data = null,
     failed = false,
     loading = false,
-    grid = null,
     selected = null; // 이유를 보고 있는 이동 추천 트랩 id
-  // 가상 트랩의 임의 배치(칸 번호 = x * 8 + y). 결과에 맞춰 고르지 않도록 모든 구역에서 고정한다.
-  var TRAPS = [
-    { id: "V-1", cell: 9 },
-    { id: "V-2", cell: 50 },
-    { id: "V-3", cell: 22 },
-    { id: "V-4", cell: 45 },
-  ];
+  // 보여줄 구역. 결과를 보고 고르지 않도록 첫 구역으로 고정한다.
+  var ZONE = "G2";
+
+  /** 모니터링과 같은 트랩을 설치 지도의 배치대로 격자 칸에 놓는다. 좌표가 없는 위치의 트랩은 뺀다. */
+  function placedTraps(ctx, n) {
+    var pos = M.mapPosition(ctx.locations),
+      names = {};
+    ctx.locations.forEach(function (l) {
+      names[l.location_id] = l.name;
+    });
+    return ctx.traps
+      .filter(function (t) {
+        return pos(t.location_id);
+      })
+      .map(function (t) {
+        return {
+          id: t.trap_id,
+          label: t.trap_id + (t.is_virtual ? " · 가상" : ""),
+          place: names[t.location_id],
+          cell: M.mapCell(pos(t.location_id), n),
+        };
+      });
+  }
 
   function pct(v) {
     return (v * 100).toFixed(1) + "%";
@@ -91,13 +107,13 @@
     return s;
   }
 
-  function mapPanel(fold, moves, movers, redraw) {
+  function mapPanel(fold, traps, moves, movers, redraw) {
     var panel = U.panel("가상 지도 · 구역 " + fold.test_grid);
     var map = el("div", "ext-map");
     map.setAttribute("role", "group");
     map.setAttribute(
       "aria-label",
-      "예측 활동 지도와 가상 트랩. 이동 추천 트랩을 누르면 옮길 칸과 이유가 나옵니다.",
+      "예측 활동 지도와 트랩. 이동 추천 트랩을 누르면 옮길 칸과 이유가 나옵니다.",
     );
     M.externalGrid(fold.shares[MODEL], data.cells).forEach(function (c) {
       var cell = el("div", "ext-cell");
@@ -120,7 +136,11 @@
         }),
       ),
     );
-    moves.forEach(function (m) {
+    moves.forEach(function (m, i) {
+      var trap = traps[i],
+        same = traps.filter(function (t) {
+          return t.cell === m.cell;
+        });
       var rev = m.target !== null,
         on = m.id === selected;
       var pin = place(
@@ -138,7 +158,20 @@
           redraw();
         };
       }
-      add(pin, el("span", "pin-dot"), el("span", "pin-label", m.id));
+      // 같은 칸의 트랩은 옆으로 나란히
+      pin.style.left =
+        "calc(" +
+        center(m.cell).x +
+        "% + " +
+        (same.indexOf(trap) - (same.length - 1) / 2) * 110 +
+        "px)";
+      pin.title = trap.place;
+      add(
+        pin,
+        el("span", "pin-dot"),
+        el("span", "pin-label", trap.label),
+        el("span", "pin-label", trap.place),
+      );
       map.appendChild(pin);
     });
     panel.appendChild(map);
@@ -146,8 +179,8 @@
     var lgd = el("div", "map-legend");
     [
       ["lg ext-high", "진할수록 예측 활동 많음"],
-      ["lg navy", "가상 트랩 (유지)"],
-      ["lg ring", "가상 트랩 (이동 추천)"],
+      ["lg navy", "트랩 (유지)"],
+      ["lg ring", "트랩 (이동 추천)"],
       ["lg ext-rec", "옮길 칸"],
     ].forEach(function (x) {
       lgd.appendChild(
@@ -189,7 +222,7 @@
   }
 
   /** 선택한 트랩의 추천 결과와 이유. n은 지도에 표시한 옮길 칸 번호. */
-  function resultPanel(fold, m, n, redraw) {
+  function resultPanel(fold, trap, m, n, redraw) {
     var side = U.panel("추천 결과");
     side.className += " side";
     side.appendChild(
@@ -197,7 +230,13 @@
         el("h3", "ext-title"),
         el("span", "num-dot", String(n)),
         document.createTextNode(
-          m.id + " : " + cellName(m.cell) + " → " + cellName(m.target),
+          trap.label +
+            " (" +
+            trap.place +
+            ") : " +
+            cellName(m.cell) +
+            " → " +
+            cellName(m.target),
         ),
       ),
     );
@@ -216,43 +255,23 @@
     return side;
   }
 
-  function render(main, redraw) {
-    // 구역마다 가장 많이 관측한 결과를 보여준다
+  function render(ctx, main, redraw) {
+    // 가장 많이 관측한 결과를 보여준다
     var days = Math.max.apply(
       null,
       data.folds.map(function (f) {
         return f.obs_days;
       }),
     );
-    var folds = data.folds.filter(function (f) {
-      return f.obs_days === days;
-    });
-    var fold =
-      folds.filter(function (f) {
-        return f.test_grid === grid;
-      })[0] || folds[0];
+    var fold = data.folds.filter(function (f) {
+      return f.obs_days === days && f.test_grid === ZONE;
+    })[0];
 
-    var seg = el("div", "seg");
-    seg.setAttribute("role", "group");
-    seg.setAttribute("aria-label", "구역 선택");
-    folds.forEach(function (f) {
-      var on = f === fold,
-        b = el("button", "seg-btn" + (on ? " on" : ""), "구역 " + f.test_grid);
-      b.type = "button";
-      b.setAttribute("aria-pressed", on ? "true" : "false");
-      b.onclick = function () {
-        grid = f.test_grid;
-        selected = null;
-        redraw();
-      };
-      seg.appendChild(b);
-    });
-    main.appendChild(add(el("div"), seg));
-
+    var traps = placedTraps(ctx, data.cells);
     var moves = M.externalMoves(
       fold.shares[MODEL],
       fold.recommended[MODEL],
-      TRAPS,
+      traps,
     );
     // 현재 위치 점수가 낮은 트랩부터
     var movers = moves
@@ -264,14 +283,20 @@
       });
     var wrap = add(
       el("div", "rec-wrap"),
-      mapPanel(fold, moves, movers, redraw),
+      mapPanel(fold, traps, moves, movers, redraw),
     );
     var picked = movers.filter(function (m) {
       return m.id === selected;
     })[0];
     if (picked)
       wrap.appendChild(
-        resultPanel(fold, picked, movers.indexOf(picked) + 1, redraw),
+        resultPanel(
+          fold,
+          traps[moves.indexOf(picked)],
+          picked,
+          movers.indexOf(picked) + 1,
+          redraw,
+        ),
       );
     main.appendChild(wrap);
     main.appendChild(
@@ -288,7 +313,7 @@
       el(
         "p",
         "muted",
-        "야생 설치류 외부 데이터(쥐 아님)로 다른 구역에서 학습한 ML(GBM)의 활동 예측이며, 지도와 트랩 위치는 가상입니다. " +
+        "야생 설치류 외부 데이터(쥐 아님)로 다른 구역에서 학습한 ML(GBM)의 활동 예측이며, 지도는 가상이며, 트랩 배치는 설치 위치 추천 지도를 옮긴 것일 뿐 실제 설치 환경의 활동 예측이 아닙니다. " +
           "처음 보는 구역 테스트에서 무작위보다 잘 맞았지만 단순 방문 빈도 방식을 넘지는 못했고, 포획 증가 효과는 검증하지 않았습니다.",
       ),
     );
@@ -301,7 +326,7 @@
         "야생동물 데이터로 학습한 모델이 제안하는 트랩 이동 (시연)",
       ),
     );
-    if (data) return render(main, redraw);
+    if (data) return render(ctx, main, redraw);
     main.appendChild(
       el(
         "div",

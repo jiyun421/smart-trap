@@ -325,6 +325,32 @@
     ],
   };
 
+  /** 설치 지도 좌표. 위치 ID를 받아 {x, y}(%, 위가 0)를 돌려주는 함수를 만든다. 좌표가 없으면 null.
+   * 설치 위치 추천과 외부 데이터 추천이 같은 배치를 쓰도록 여기 둔다. */
+  function mapPosition(locations) {
+    var byId = {},
+      maxX = 1,
+      maxY = 1;
+    locations.forEach(function (l) {
+      byId[l.location_id] = l;
+      maxX = Math.max(maxX, l.x || 0);
+      maxY = Math.max(maxY, l.y || 0);
+    });
+    return function (id) {
+      var l = byId[id];
+      return l && typeof l.x === "number" && typeof l.y === "number"
+        ? { x: 10 + (l.x / (maxX + 1)) * 80, y: 10 + (l.y / (maxY + 1)) * 70 }
+        : null;
+    };
+  }
+
+  /** 지도 % 위치가 속한 n x n 격자의 칸 번호. */
+  function mapCell(pos, n) {
+    var col = Math.min(n - 1, Math.floor((pos.x / 100) * n)),
+      row = Math.min(n - 1, Math.floor((pos.y / 100) * n));
+    return col * n + (n - 1 - row);
+  }
+
   /** 외부 데이터 지도 칸. 칸 번호는 x * n + y. 화면 순서(위→아래, 왼쪽→오른쪽)로 돌려주며 level은 최댓값 대비 진하기. */
   function externalGrid(shares, n) {
     var max = Math.max.apply(null, shares);
@@ -370,6 +396,8 @@
 
   var api = {
     externalMoves: externalMoves,
+    mapPosition: mapPosition,
+    mapCell: mapCell,
     externalGrid: externalGrid,
     VALIDATION: VALIDATION,
     STATUS: STATUS,

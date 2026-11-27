@@ -267,3 +267,20 @@ test("검증 근거: 배지·요약·한계가 있고 포획은 가상 추정이
   assert.ok(v.badge && v.summary && v.caveats.length >= 3);
   assert.ok(v.caveats.some((c) => c.includes("가상 데이터 기반 추정")));
 });
+
+test("지도 위치: 설정 좌표를 지도 %로 바꾸고, 같은 지점을 외부 데이터 격자 칸으로 옮긴다", () => {
+  const locations = [
+    { location_id: "a", x: 1, y: 1 },
+    { location_id: "b", x: 7, y: 4 },
+    { location_id: "c", x: null, y: null },
+  ];
+  const pos = M.mapPosition(locations);
+  assert.deepEqual(pos("a"), { x: 20, y: 24 });
+  assert.deepEqual(pos("b"), { x: 80, y: 66 });
+  assert.equal(pos("c"), null);
+  assert.equal(pos("없음"), null);
+  // 칸 번호 = x * 8 + y, y는 아래가 0 (화면 %는 위가 0)
+  assert.equal(M.mapCell(pos("a"), 8), 1 * 8 + 6);
+  assert.equal(M.mapCell(pos("b"), 8), 6 * 8 + 2);
+  assert.equal(M.mapCell({ x: 100, y: 100 }, 8), 7 * 8 + 0);
+});
