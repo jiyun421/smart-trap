@@ -20,6 +20,11 @@ test("측정값: eCO2/TVOC는 0이 아니라 null", () => {
   assert.equal(typeof row.load_cell_g, "number");
 });
 
+test("측정값: 백엔드의 eCO2/TVOC를 옮긴다(0도 값이다)", () => {
+  const row = A.readingRow({ trap_id: "TRAP-01", observed_at: "2026-11-27T00:00:00Z", env: { eco2_ppm: 450, tvoc_ppb: 0 } });
+  assert.deepEqual([row.eco2_ppm, row.tvoc_ppb], [450, 0]);
+});
+
 test("감지: 종 미정·unknown은 null, rat 외는 non_rat", () => {
   const rows = fx("visits_limit_500").items.map(A.eventRow);
   const by = Object.fromEntries(rows.map((r) => [r.event_id, r]));

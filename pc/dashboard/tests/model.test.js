@@ -124,7 +124,7 @@ test("감지 통계 제목은 실제/가상을 구분한다", () => {
 // ---- 리디자인에서 추가된 함수 ----
 const NOW = Date.parse("2026-05-10T12:00:00+09:00");
 
-test("트랩 상태: 통신 없음/30분 초과 → 오프라인, 비정상·device_check → 점검 필요", () => {
+test("트랩 상태: 통신 없음/35분 초과 → 오프라인, 비정상·device_check → 점검 필요", () => {
   const t = (over) => ({
     status: "operating",
     last_seen_at: "2026-05-10T11:50:00+09:00",
@@ -134,6 +134,15 @@ test("트랩 상태: 통신 없음/30분 초과 → 오프라인, 비정상·dev
   assert.equal(M.trapState(t({ last_seen_at: null }), NOW), "off");
   assert.equal(
     M.trapState(t({ last_seen_at: "2026-05-10T11:20:00+09:00" }), NOW),
+    "off",
+  );
+  // 30분 주기 전송이라 35분까지는 오프라인이 아니다.
+  assert.equal(
+    M.trapState(t({ last_seen_at: "2026-05-10T11:26:00+09:00" }), NOW),
+    "ok",
+  );
+  assert.equal(
+    M.trapState(t({ last_seen_at: "2026-05-10T11:24:00+09:00" }), NOW),
     "off",
   );
   assert.equal(M.trapState(t({ status: "maintenance" }), NOW), "warn");

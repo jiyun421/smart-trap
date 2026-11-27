@@ -2,7 +2,7 @@
 
 백엔드 이벤트(backend/docs/api.md)를 기존 전처리(src/preprocessing.py)가 받는 형식으로 바꾼 뒤 그대로 넘긴다.
 - 방문(visit): entry_detected + visit_resolved를 visit_id로 묶는다. 종이 없거나 unknown이면 미분류(null), rat 외는 non_rat.
-- 센서: 온도·습도·미끼 무게(bait_g -> load_cell_g)가 하나라도 있는 이벤트. eCO2/TVOC는 백엔드에 없어 NaN이다(0 아님).
+- 센서: 온도·습도·미끼 무게(bait_g -> load_cell_g)가 하나라도 있는 이벤트. eCO2/TVOC(참고값)는 보낸 이벤트에만 있고, 없으면 NaN이다(0 아님).
 - 작동 시간: 백엔드에 상태 로그가 없어, 이벤트(주기 보고 포함)가 이어지는 구간을 작동 중으로 본다.
   이벤트 사이 간격이 보고 주기의 3배(백엔드의 offline 기준)를 넘으면 그 시점부터 다음 이벤트까지는 작동하지 않은 것으로 계산한다.
 - 위치 이력은 /api/deployments의 설치 이력이다.
@@ -85,14 +85,16 @@ def visit_rows(events):
 
 
 def sensor_rows(events):
-    """온도·습도·미끼 무게 중 하나라도 있는 이벤트 -> 센서 행. eCO2/TVOC는 NaN."""
+    """온도·습도·미끼 무게 중 하나라도 있는 이벤트 -> 센서 행. eCO2/TVOC는 CSV에 없으면 NaN."""
     env = events[["temperature_c", "humidity_pct", "bait_g"]].apply(_num)
     has = env.notna().any(axis=1)
+    air = events[has].reindex(columns=["eco2_ppm", "tvoc_ppb"]).apply(_num)  # 이전 CSV에는 없는 컬럼
     return [{
         "reading_id": f"{r.deployment_id}:{r.event_id}", "trap_id": r.trap_id, "measured_at": r.observed_at,
-        "temperature_c": t, "humidity_pct": h, "tvoc_ppb": None, "eco2_ppm": None, "load_cell_g": b,
-    } for r, t, h, b in zip(events[has].itertuples(), env[has]["temperature_c"],
-                            env[has]["humidity_pct"], env[has]["bait_g"])]
+        "temperature_c": t, "humidity_pct": h, "tvoc_ppb": v, "eco2_ppm": c, "load_cell_g": b,
+    } for r, t, h, b, c, v in zip(events[has].itertuples(), env[has]["temperature_c"],
+                            env[has]["humidity_pct"], env[has]["bait_g"],
+                            air["eco2_ppm"], air["tvoc_ppb"])]
 
 
 def status_logs(events, traps):

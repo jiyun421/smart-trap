@@ -110,7 +110,7 @@
   // 프로젝트의 모든 시각은 KST(+09:00)다. 날짜 구분은 KST 기준으로 한다.
   var KST_MS = 9 * 3600 * 1000,
     DAY_MS = 86400000,
-    OFFLINE_MS = 30 * 60 * 1000;
+    OFFLINE_MS = 35 * 60 * 1000;
 
   function ms(iso) {
     var t = Date.parse(iso);
@@ -126,7 +126,7 @@
     off: { label: "오프라인", icon: "○" },
   };
 
-  /** 오프라인: 마지막 통신이 없거나 30분 넘음 / 점검 필요: 상태가 operating이 아니거나 추천 판정이 device_check */
+  /** 오프라인: 마지막 통신이 없거나 35분 넘음 / 점검 필요: 상태가 operating이 아니거나 추천 판정이 device_check */
   function trapState(trap, nowMs, rec) {
     var seen = ms(trap.last_seen_at);
     if (seen === null || nowMs - seen > OFFLINE_MS) return "off";

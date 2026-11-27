@@ -7,7 +7,7 @@ import pandas as pd
 import pytest
 
 from src.api_client import ApiError
-from src.backend_import import build_summary, fetch_backend_data, status_logs, visit_rows
+from src.backend_import import build_summary, fetch_backend_data, sensor_rows, status_logs, visit_rows
 
 COLUMNS = ["schema_version", "trap_id", "deployment_id", "location_id", "visit_id", "event_id", "event_type",
            "observed_at", "received_at", "target_species", "species_code", "confidence", "temperature_c",
@@ -136,3 +136,11 @@ def test_fetch_reports_http_errors():
     with pytest.raises(ApiError) as e:
         fetch_backend_data("http://pi:5000", "2026-11-01", "2026-11-02", session=FakeSession("", status=401))
     assert e.value.status == 401
+
+
+def test_air_quality_is_imported_when_the_backend_exports_it():
+    row = event("telemetry", T0, "air", temperature_c="20")
+    frame = to_frame([row])
+    frame["eco2_ppm"], frame["tvoc_ppb"] = "450.0", "0.0"
+    (out,) = sensor_rows(frame)
+    assert (out["eco2_ppm"], out["tvoc_ppb"]) == (450.0, 0.0)

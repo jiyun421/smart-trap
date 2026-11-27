@@ -1,6 +1,6 @@
 /* Pi 백엔드(backend/docs/api.md) 응답을 대시보드가 쓰는 형태로 바꾼다 (DOM 없음, node로 테스트 가능).
  * 백엔드에 없는 값은 0이 아니라 null로 둔다(화면에서 "—"). 센서 대응:
- *   로드셀(load_cell_g) ← env.bait_g,  eCO₂·TVOC ← 백엔드에 없음(null)
+ *   로드셀(load_cell_g) ← env.bait_g,  eCO₂·TVOC ← env.eco2_ppm·tvoc_ppb(참고값)
  * 추천 변환은 pc/src/backend_client.py 의 from_backend_runs 와 같은 규칙이다. */
 (function (root) {
   "use strict";
@@ -46,8 +46,8 @@
       measured_at: kst(e.observed_at),
       temperature_c: num(env.temperature_c),
       humidity_pct: num(env.humidity_pct),
-      tvoc_ppb: null,
-      eco2_ppm: null,
+      tvoc_ppb: num(env.tvoc_ppb),
+      eco2_ppm: num(env.eco2_ppm),
       load_cell_g: num(env.bait_g),
     };
   }
