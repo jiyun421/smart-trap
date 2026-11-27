@@ -9,7 +9,11 @@ ENV_FIELDS = {
     "humidity_pct": (0, 100),
     "illuminance_lux": (0, None),
     "bait_g": (0, None),
+    "eco2_ppm": (0, None),
+    "tvoc_ppb": (0, None),
 }
+# 002에서 추가한 값. 없을 때는 payload에 넣지 않아, 이전에 저장한 이벤트의 재전송이 충돌하지 않는다.
+OMIT_WHEN_EMPTY = ("eco2_ppm", "tvoc_ppb")
 EVENT_TYPES = ("telemetry", "entry_detected", "visit_resolved")
 DOOR_STATES = ("open", "closed", "unknown")
 OCCUPANCY_STATES = ("occupied", "empty", "unknown")
@@ -65,7 +69,8 @@ def parse_event(body):
 
 
 def store_event(connection, event):
-    normalized = canonical_json(event)
+    normalized = canonical_json({key: value for key, value in event.items()
+                                 if value is not None or key not in OMIT_WHEN_EMPTY})
     with transaction(connection, write=True):
         trap_id, event_id = event["trap_id"], event["event_id"]
         existing = connection.execute(
@@ -122,5 +127,5 @@ def event_json(row):
 
 
 def nest_environment(result):
-    result["env"] = {field: result.pop(field) for field in ENV_FIELDS}
+    result["env"] = {field: result.pop(field, None) for field in ENV_FIELDS}
     return result

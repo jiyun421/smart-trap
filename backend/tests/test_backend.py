@@ -236,6 +236,33 @@ class BackendTest(unittest.TestCase):
         history = self.read("recommendations?limit=1")
         self.assertEqual((history["items"][0]["run_id"], history["next_offset"]), ("run-2", 1))
 
+    def test_air_quality_is_stored_and_returned(self):
+        now = utc_text(datetime.now(timezone.utc))
+        self.send(self.event("air", observed_at=now, env={"eco2_ppm": 450, "tvoc_ppb": 12}))
+        env = self.read("readings")["items"][0]["env"]
+        self.assertEqual((env["eco2_ppm"], env["tvoc_ppb"]), (450, 12))
+        observations = self.read("traps/trap-1/status")["observations"]
+        self.assertEqual((observations["eco2_ppm"]["value"], observations["tvoc_ppb"]["value"]), (450, 12))
+        self.send(self.event("air-csv", env={"eco2_ppm": 400, "tvoc_ppb": 0}))
+        response = self.client.get("/api/export/events.csv?" + TEST_PERIOD, headers=READ, buffered=True)
+        row = next(csv.DictReader(io.StringIO(response.get_data(as_text=True))))
+        self.assertEqual((row["eco2_ppm"], row["tvoc_ppb"]), ("400.0", "0.0"))
+        for fields in ({"eco2_ppm": -1}, {"tvoc_ppb": -1}):
+            self.send(self.event("invalid", env=fields), 400)
+
+    def test_events_without_air_quality_keep_the_earlier_stored_form(self):
+        # 002 이전에 저장한 payload에는 eco2/tvoc 키가 없다. 조회와 재전송이 그대로 되어야 한다.
+        entry = self.event("entry", "entry_detected", visit_id="v1", env={"humidity_pct": 50})
+        self.send(entry)
+        with sqlite3.connect(self.path) as connection:
+            payload = connection.execute("SELECT payload FROM trap_events").fetchone()[0]
+        connection.close()
+        self.assertNotIn("eco2_ppm", payload)
+        self.assertNotIn("tvoc_ppb", payload)
+        env = self.read("visits")["items"][0]["entry"]["env"]
+        self.assertEqual((env["humidity_pct"], env["eco2_ppm"], env["tvoc_ppb"]), (50, None, None))
+        self.assertTrue(self.send(entry, 200)["duplicate"])
+
     def test_read_auth_can_be_turned_off_without_opening_writes(self):
         client = create_app(dict(self.config, READ_AUTH="off")).test_client()
         self.assertEqual(client.get("/api/traps").status_code, 200)

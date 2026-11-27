@@ -52,6 +52,7 @@ python -m unittest discover -s tests -v -k test_csv_to_recommendation_round_trip
 
 운영 환경 변수 예시는 [.env.example](.env.example)에 있습니다. 로컬 개발에서는 값을 셸 환경 변수에 설정하며, 운영 systemd 유닛은 `/etc/iot-trap/backend.env`를 읽습니다. 토큰은 장치별 키, PC 읽기 키, PC 추천 쓰기 키를 각각 사용합니다.
 
+- ESP32 MQTT 중계: `python -m app.mqtt_bridge` (설정은 [배포 문서](docs/deploy.md))
 - [Pi 설치, SSH, Gunicorn, systemd, 백업 및 복원](docs/deploy.md)
 - [ESP32, PC 분석, 대시보드 API 계약](docs/api.md)
 - [단계별 구현과 검증 현황](docs/verification.md)

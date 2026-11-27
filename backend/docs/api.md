@@ -44,7 +44,9 @@ POST 저장은 `201`, 같은 ID에 같은 정규화 내용을 재전송하면 `2
     "temperature_c": 17.2,
     "humidity_pct": 66.4,
     "illuminance_lux": 4.3,
-    "bait_g": 24.1
+    "bait_g": 24.1,
+    "eco2_ppm": 450,
+    "tvoc_ppb": 12
   }
 }
 ```
@@ -57,9 +59,23 @@ POST 저장은 `201`, 같은 ID에 같은 정규화 내용을 재전송하면 `2
 | `entry_detected` | `visit_id`. 측정한 환경·도어·점유값을 첨부할 수 있음                                               |
 | `visit_resolved` | `visit_id`, `species_code`, `door_state`, `outcome`. `confidence`, `occupancy_state`, `env`는 선택 |
 
-`door_state`는 `open`, `closed`, `unknown`이고, `occupancy_state`는 `occupied`, `empty`, `unknown`입니다. `outcome`은 `capture_confirmed`, `release_confirmed`, `unconfirmed`, `failed`입니다. 확인 결과에는 팀이 정의한 `outcome_evidence`를 비어 있지 않은 문자열 또는 JSON 객체로 전송하고, `observed_at`은 확인 시각을 사용합니다. 도어 닫힘 또는 목표종 분류만 확인한 상황의 `outcome`은 `unconfirmed`입니다. 환경 측정값과 신뢰도는 미측정 시 생략하거나 `null`을 전송합니다.
+`door_state`는 `open`, `closed`, `unknown`이고, `occupancy_state`는 `occupied`, `empty`, `unknown`입니다. `outcome`은 `capture_confirmed`, `release_confirmed`, `unconfirmed`, `failed`입니다. 확인 결과에는 팀이 정의한 `outcome_evidence`를 비어 있지 않은 문자열 또는 JSON 객체로 전송하고, `observed_at`은 확인 시각을 사용합니다. 도어 닫힘 또는 목표종 분류만 확인한 상황의 `outcome`은 `unconfirmed`입니다. `eco2_ppm`, `tvoc_ppb`는 가스 센서의 추정값이며 참고용입니다. 환경 측정값과 신뢰도는 미측정 시 생략하거나 `null`을 전송합니다.
 
 부팅 시 장치 시계를 동기화하고 주기를 트랩 설정과 맞춥니다. 타임아웃이나 `5xx` 발생 시 같은 `event_id`, `deployment_id`, `observed_at`, 관측값을 보존해 재시도합니다. `Retry-After`가 있으면 반영하고, 대기열은 지수 백오프와 임의 지연을 사용합니다. `201` 또는 `200` 수신 후 대기열에서 제거하고, `4xx`는 원인과 함께 기록합니다. 진입과 처리는 같은 `visit_id`를 쓰며 도착 순서가 바뀔 수 있습니다. 재배치 전에 큐에 넣은 이벤트는 원래 설치 ID를 유지합니다.
+
+## ESP32 MQTT 이벤트
+
+현재 ESP32 펌웨어는 위 HTTP 형식 대신 `trap/v1/<trap_id>/event`로 발행하며, Pi의 중계(`app.mqtt_bridge`)가 변환합니다.
+
+| `result` | 저장되는 이벤트                          | 종 코드   |
+| -------- | ---------------------------------------- | --------- |
+| `target` | `entry_detected` + `visit_resolved`      | `rat`     |
+| `other`  | `entry_detected` + `visit_resolved`      | `non_rat` |
+| `fail`   | `entry_detected` + `visit_resolved`      | `unknown` |
+| `empty`  | `telemetry`, `occupancy_state`는 `empty` | 없음      |
+| `periodic` | `telemetry`                            | 없음      |
+
+`temp_c`, `humidity_pct`, `lux`, `load_g`, `eco2`, `tvoc`는 `env`의 `temperature_c`, `humidity_pct`, `illuminance_lux`, `bait_g`, `eco2_ppm`, `tvoc_ppb`가 됩니다. `null`과 음수 `load_g`는 뺍니다. 문 상태 `between`은 `unknown`입니다. `observed_at`은 중계의 수신 시각, `outcome`은 `unconfirmed`입니다. `location`, `command`, `species`, `battery_mv`는 저장하지 않으며 위치는 등록된 설치를 따릅니다. 같은 `boot`·`uptimeMs`·`result`가 10분 안에 다시 오면 재전송으로 보고 무시합니다.
 
 ## 조회와 집계
 
@@ -72,7 +88,7 @@ POST 저장은 `201`, 같은 ID에 같은 정규화 내용을 재전송하면 `2
 - CSV는 `trap_id`를 선택적으로 받고 `from`과 `to`를 요구하며 한 요청 최대 31일입니다. UTF-8로 출력하고, 결측치는 빈 셀입니다. `outcome_evidence`는 JSON 문자열 또는 객체로 인코딩합니다. 주기 보고는 CSV에 포함되며 보고가 없는 구간의 관측 여부는 불명으로 취급합니다.
 
 ```text
-schema_version,trap_id,deployment_id,location_id,visit_id,event_id,event_type,observed_at,received_at,target_species,species_code,confidence,temperature_c,humidity_pct,illuminance_lux,bait_g,door_state,occupancy_state,outcome,outcome_evidence
+schema_version,trap_id,deployment_id,location_id,visit_id,event_id,event_type,observed_at,received_at,target_species,species_code,confidence,temperature_c,humidity_pct,illuminance_lux,bait_g,eco2_ppm,tvoc_ppb,door_state,occupancy_state,outcome,outcome_evidence
 ```
 
 ## PC 위치 추천

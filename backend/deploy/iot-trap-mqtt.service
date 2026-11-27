@@ -1,0 +1,21 @@
+[Unit]
+Description=IOT Trap MQTT to HTTP bridge
+Wants=mosquitto.service
+After=network.target mosquitto.service iot-trap.service
+
+[Service]
+Type=simple
+User=iot-trap
+Group=iot-trap
+WorkingDirectory=/opt/iot-trap
+EnvironmentFile=/etc/iot-trap/backend.env
+ExecStart=/opt/iot-trap/.venv/bin/python -m app.mqtt_bridge
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
