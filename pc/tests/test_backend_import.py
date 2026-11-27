@@ -144,3 +144,15 @@ def test_air_quality_is_imported_when_the_backend_exports_it():
     frame["eco2_ppm"], frame["tvoc_ppb"] = "450.0", "0.0"
     (out,) = sensor_rows(frame)
     assert (out["eco2_ppm"], out["tvoc_ppb"]) == (450.0, 0.0)
+
+
+@pytest.mark.parametrize("rows", [
+    [event("telemetry", T0, "t0", temperature_c="20")],  # 감지 없음
+    [event("entry_detected", T0, "e1", visit_id="v1")],  # 센서 값 없음
+    [],  # 이벤트 없음
+], ids=["no_visits", "no_sensors", "no_events"])
+def test_quiet_period_still_makes_a_row_per_day(rows):
+    summary, _ = build_summary(to_frame(rows), TRAPS, DEPLOYMENTS, "2026-11-10", "2026-11-12")
+    assert list(summary["date"]) == ["2026-11-10", "2026-11-11"]
+    assert summary["rat_detections"].sum() == 0
+    assert summary["unclassified_detections"].sum() == sum(r["event_type"] == "entry_detected" for r in rows)

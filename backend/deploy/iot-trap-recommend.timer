@@ -1,0 +1,11 @@
+[Unit]
+Description=Run IOT Trap recommendation update daily
+
+[Timer]
+# 갱신 간격은 이 줄로 바꾼다. 예: 6시간마다 *-*-* 00/6:10:00 Asia/Seoul
+OnCalendar=*-*-* 00:10:00 Asia/Seoul
+# 예정 시각에 Pi가 꺼져 있었으면 켜진 뒤 한 번 실행한다.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

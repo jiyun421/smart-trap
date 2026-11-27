@@ -107,6 +107,35 @@ sudo journalctl -u iot-trap-mqtt.service -n 20 --no-pager
 curl -fsS http://127.0.0.1:5000/api/traps/TRAP-01/status   # TRAP_READ_AUTH=off일 때
 ```
 
+## 추천 하루 한 번 갱신
+
+`pc/src/update_recommendations.py`가 서버의 최근 28일(어제까지) 기록을 읽고, 가상 트랩 시나리오를 합쳐 추천을 계산한 뒤 저장합니다. 실제 트랩의 설치 이력이 없으면 저장하지 않고 실패하며, 이전 추천이 남습니다. 가상 트랩과 그 위치도 서버에 등록되어 있어야 합니다(`pc/README.md`). 가상 트랩의 값은 고정이므로 갱신으로 달라지는 입력은 실제 트랩의 기록뿐입니다.
+
+저장소 최상위에서 코드를 복사하고 전용 가상 환경을 만듭니다.
+
+```sh
+sudo mkdir -p /opt/iot-trap/pc
+sudo cp -R pc/src /opt/iot-trap/pc/
+sudo python3 -m venv /opt/iot-trap/pc/.venv
+sudo /opt/iot-trap/pc/.venv/bin/pip install 'pandas<3' numpy scipy requests
+sudo chmod -R a+rX /opt/iot-trap/pc
+sudo install -m 0644 backend/deploy/iot-trap-recommend.service backend/deploy/iot-trap-recommend.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now iot-trap-recommend.timer
+```
+
+`/etc/iot-trap/backend.env`의 `TRAP_RECOMMENDATION_TOKEN`으로 저장합니다. `TRAP_READ_AUTH=required`이면 `TRAP_READ_TOKEN`도 필요하고, `TRAP_BIND`를 특정 IP로 바꿨다면 `TRAP_API_URL=http://<그 IP>:5000`을 추가합니다.
+
+바로 한 번 실행해 결과를 확인하고, 다음 실행 시각을 봅니다.
+
+```sh
+sudo systemctl start iot-trap-recommend.service
+sudo journalctl -u iot-trap-recommend.service -n 30 --no-pager
+systemctl list-timers iot-trap-recommend.timer
+```
+
+간격을 바꾸려면 `/etc/systemd/system/iot-trap-recommend.timer`의 `OnCalendar`를 고친 뒤 `sudo systemctl daemon-reload && sudo systemctl restart iot-trap-recommend.timer`를 실행합니다.
+
 ## SQLite 백업과 복원
 
 SQLite CLI의 온라인 백업으로 WAL을 포함한 시점 일관성 있는 사본을 만듭니다. 아래 경로는 DB 기본 위치를 기준으로 합니다. 생성된 파일은 서비스 계정만 읽을 수 있게 관리하고 운영 장비 외부에도 별도 보관합니다. [SQLite CLI 문서](https://sqlite.org/cli.html)
